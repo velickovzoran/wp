@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Workshop form</title>
+</head>
+<body>
+<h1 th:text="${workshop != null} ? 'Edit workshop' : 'Add workshop'"></h1>
+
+<form method="post"
+      th:action="${workshop != null} ? @{/workshops/edit/{id}(id=${workshop.id})} : @{/workshops/add}">
+    <label>Title</label>
+    <input type="text" name="title" th:value="${workshop?.title}"><br>
+
+    <label>Category</label>
+    <input type="text" name="category" th:value="${workshop?.category}"><br>
+
+    <label>Price</label>
+    <input type="number" name="price" min="0" step="0.01" th:value="${workshop?.price}" required><br>
+
+    <label>Capacity</label>
+    <input type="number" name="capacity" min="0" th:value="${workshop?.capacity}" required><br>
+
+    <label>Instructor</label>
+    <select name="instructorId">
+        <option th:each="i : ${instructors}"
+                th:value="${i.id}"
+                th:text="${i.name + ' ' + i.surname}"
+                th:selected="${workshop != null && workshop.instructor != null && workshop.instructor.id == i.id}">
+        </option>
+    </select><br>
+
+    <button type="submit">Save</button>
+</form>
+<a href="/workshops">Back</a>
+</body>
+</html>
