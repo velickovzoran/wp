@@ -213,6 +213,28 @@ pre.code.fill select.dd{font:600 12px "JetBrains Mono";padding:3px 26px 3px 8px;
 .endbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
 .hidden{display:none!important}
 @media (max-width:560px){#hud{gap:8px;padding:8px 10px}#hud .logo{font-size:20px}.stars svg{width:13px;height:13px}.timer{font-size:12px;padding:5px 7px;white-space:nowrap}.timer .tl{display:none}.money{font-size:20px;min-width:0}#hud .pill{display:none}.nav .hint{display:none}.navgrid{grid-auto-rows:34px}.nb{height:34px}.card{padding:18px 14px}.qtext{font-size:15.5px}.mrow{flex-direction:column;align-items:stretch}.hrow{grid-template-columns:100px 1fr}}
+/* ---------- VICE FM radio ---------- */
+#radio{position:fixed;left:16px;bottom:16px;z-index:40;border-radius:16px;background:rgba(12,6,22,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,61,139,.45);box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 24px rgba(255,61,139,.25);overflow:hidden;width:250px;transition:width .3s}
+#radio .rtop{display:flex;align-items:center;gap:10px;padding:9px 10px}
+#radio .rbtn{flex:none;width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;background:var(--grad);color:#1a0718;display:grid;place-items:center;box-shadow:0 4px 14px rgba(255,61,139,.5)}
+#radio .rbtn svg{width:14px;height:14px;fill:currentColor}
+#radio .rinfo{flex:1;min-width:0;line-height:1.2}
+#radio .rst{font:400 15px Anton,sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+#radio .rsong{font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#radio .eq{display:flex;gap:2px;align-items:flex-end;height:14px}
+#radio .eq i{width:3px;background:var(--teal);border-radius:1px;height:3px}
+#radio.playing .eq i{animation:eq .9s ease-in-out infinite}
+#radio.playing .eq i:nth-child(2){animation-delay:.2s}#radio.playing .eq i:nth-child(3){animation-delay:.4s}#radio.playing .eq i:nth-child(4){animation-delay:.1s}
+@keyframes eq{0%,100%{height:3px}50%{height:14px}}
+#radio .rvid{height:0;transition:height .3s;background:#000}
+#radio.playing .rvid{height:140px}
+#radio .rvol{display:none;align-items:center;gap:8px;padding:6px 12px 10px}
+#radio.playing .rvol{display:flex}
+#radio .rvol input{flex:1;accent-color:#ff3d8b}
+#radio .rvol span{font:600 10px Inter;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+#radio .rmin{background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;padding:0 2px}
+#radio.mini{width:auto}#radio.mini .rinfo,#radio.mini .rvol,#radio.mini .rmin{display:none}#radio.mini.playing .rvid{height:90px;width:160px}
+@media (max-width:560px){#radio{left:8px;bottom:8px;width:210px}#radio.playing .rvid{height:118px}}
 .kbd{font:600 11px "JetBrains Mono";padding:2px 6px;border-radius:5px;border:1px solid var(--line);color:var(--dim)}
 </style>
 </head>
@@ -231,6 +253,16 @@ pre.code.fill select.dd{font:600 12px "JetBrains Mono";padding:3px 26px 3px 8px;
 </svg>
 <canvas id="fx"></canvas><div class="scan"></div>
 <div id="toast"></div>
+<div id="radio" title="VICE FM">
+  <div class="rtop">
+    <button class="rbtn" id="rPlay" aria-label="Play music"><svg viewBox="0 0 24 24" id="rIcon"><path d="M7 4v16l13-8z"/></svg></button>
+    <div class="rinfo"><div class="rst">Vice FM</div><div class="rsong">Justice · Flower In A Hurricane</div></div>
+    <div class="eq"><i></i><i></i><i></i><i></i></div>
+    <button class="rmin" id="rMin" aria-label="Minimize">▾</button>
+  </div>
+  <div class="rvid"><div id="ytp"></div></div>
+  <div class="rvol"><span>Vol</span><input type="range" id="rVol" min="0" max="100" value="35"></div>
+</div>
 
 <main>
   <!-- START -->
@@ -927,6 +959,27 @@ function loop(){cx.clearRect(0,0,W,H);
     if(b.sq){cx.save();cx.translate(b.x,b.y);cx.rotate(b.l*10);cx.fillRect(-b.r,-b.r/2,b.r*2,b.r);cx.restore()}else{cx.beginPath();cx.arc(b.x,b.y,b.r,0,7);cx.fill()}});
   cx.globalAlpha=1;if(!reduce)requestAnimationFrame(loop)}
 loop();
+
+/* ---------- VICE FM (official YouTube embed, Justice channel) ---------- */
+const VID="5dPwBWvmcbQ";let yt=null,ytReady=false,wantPlay=false,ytFail=false;
+const radio=$("#radio"),PLAY='<path d="M7 4v16l13-8z"/>',PAUSE='<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+let vol=store.get("vm_vol",35);$("#rVol").value=vol;
+(function(){const s=document.createElement("script");s.src="https://www.youtube.com/iframe_api";s.onerror=()=>{ytFail=true;radio.classList.remove("playing");$("#radio .rsong").textContent="Music unavailable here"};document.head.appendChild(s)})();
+window.onYouTubeIframeAPIReady=function(){
+  yt=new YT.Player("ytp",{width:"100%",height:"100%",videoId:VID,
+    playerVars:{autoplay:0,loop:1,playlist:VID,controls:1,playsinline:1,rel:0,modestbranding:1},
+    events:{onReady:()=>{ytReady=true;yt.setVolume(vol);if(wantPlay)yt.playVideo()},
+      onStateChange:e=>{const on=e.data===1||e.data===3;if(on){radio.classList.add("playing");wantPlay=true}else if(e.data===2)wantPlay=false;
+        $("#rIcon").innerHTML=on?PAUSE:PLAY;}}});
+};
+function musicPlay(){if(ytFail)return;wantPlay=true;radio.classList.add("playing");if(ytReady)yt.playVideo()}
+function musicPause(){wantPlay=false;if(ytReady)yt.pauseVideo();radio.classList.remove("playing");$("#rIcon").innerHTML=PLAY}
+$("#rPlay").onclick=()=>{const st=ytReady?yt.getPlayerState():-1,on=ytReady?(st===1||st===3):wantPlay;if(on){musicPause();store.set("vm_music","off")}else{musicPlay();store.set("vm_music","on")}};
+$("#rVol").oninput=e=>{vol=+e.target.value;store.set("vm_vol",vol);if(ytReady)yt.setVolume(vol)};
+$("#rMin").onclick=()=>radio.classList.add("mini");
+radio.addEventListener("click",e=>{if(radio.classList.contains("mini")&&!e.target.closest(".rbtn"))radio.classList.remove("mini")});
+const autoMusic=()=>{if(store.get("vm_music","on")!=="off"&&!wantPlay)musicPlay()};
+$("#mExam").addEventListener("click",autoMusic);$("#mPrac").addEventListener("click",autoMusic);
 
 /* ---------- boot ---------- */
 chips();
