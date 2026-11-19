@@ -9,6 +9,8 @@
 
 **Квиз:** https://velickovzoran.github.io/wp/
 
+**VICE MIDTERM** (прашања од колоквиуми и Discord бази, exam simulation + practice): https://velickovzoran.github.io/wp/vice-midterm/
+
 Лабораториите се стартуваат од `wp-labs-2026/`:
 
 ```bash

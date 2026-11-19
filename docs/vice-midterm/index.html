@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VICE MIDTERM · ВП Прв колоквиум</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0c0616; --night2:#160a26; --ink:#f6eefc; --mute:#b9a7cf; --dim:#7d6a96;
+  --pink:#ff3d8b; --hot:#ff2e6e; --orange:#ffb347; --sun:#ff7a3d; --teal:#2de2e6; --purple:#9b5cff; --lime:#7dffb0; --red:#ff4d5e;
+  --card:rgba(22,10,38,.78); --line:rgba(255,255,255,.09);
+  --grad:linear-gradient(100deg,#ff3d8b 0%,#ff7a3d 45%,#ffcf5c 70%,#9b5cff 100%);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--night);color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow-x:hidden}
+/* ---------- Sky ---------- */
+#sky{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(120% 70% at 50% 108%,rgba(255,122,61,.55) 0%,rgba(255,61,139,.35) 30%,rgba(155,92,255,.18) 55%,transparent 75%),
+  linear-gradient(180deg,#0c0616 0%,#1b0b33 45%,#3a0f45 72%,#6b1650 88%,#ff5a6e 100%);}
+#sun{position:fixed;left:50%;bottom:-12vmin;width:52vmin;height:52vmin;transform:translateX(-50%);border-radius:50%;z-index:0;
+  background:linear-gradient(180deg,#ffd76b 0%,#ff9a3d 45%,#ff3d8b 100%);filter:blur(.3px);opacity:.85;
+  -webkit-mask:repeating-linear-gradient(180deg,#000 0 14px,transparent 14px 18px);mask:repeating-linear-gradient(180deg,#000 0 14px,transparent 14px 18px);
+  animation:sunpulse 7s ease-in-out infinite}
+@keyframes sunpulse{50%{transform:translateX(-50%) scale(1.04);opacity:.95}}
+#palms{position:fixed;left:0;right:0;bottom:0;width:100%;z-index:1;pointer-events:none;height:34vh;opacity:.95}
+#fx{position:fixed;inset:0;z-index:2;pointer-events:none}
+.scan{position:fixed;inset:0;z-index:3;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+main{position:relative;z-index:5;max-width:1080px;margin:0 auto;padding:22px 16px 160px}
+/* ---------- Type ---------- */
+.logo{font-family:Anton,Impact,sans-serif;letter-spacing:.02em;line-height:.86;text-transform:uppercase;margin:0;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 24px rgba(255,61,139,.45))}
+.kicker{font-weight:800;letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:var(--teal);text-shadow:0 0 12px rgba(45,226,230,.6)}
+h2.sec{font-family:Anton,sans-serif;font-weight:400;font-size:28px;letter-spacing:.04em;margin:0 0 6px;text-transform:uppercase}
+code,pre,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+code{background:rgba(155,92,255,.18);border:1px solid rgba(155,92,255,.3);padding:1px 6px;border-radius:6px;font-size:.88em;color:#ffd9ec}
+/* ---------- Start ---------- */
+#start{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:5vh}
+#start .logo{font-size:clamp(64px,13vw,150px)}
+#start .logo span{display:block}
+.sub{color:var(--mute);font-size:16px;margin:14px 0 30px;max-width:620px}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;width:100%;max-width:820px}
+.mode{position:relative;text-align:left;cursor:pointer;border:none;color:inherit;font:inherit;padding:24px 22px 22px;border-radius:20px;background:var(--card);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow:hidden;transition:transform .25s cubic-bezier(.2,.9,.3,1.3),box-shadow .25s}
+.mode::before{content:"";position:absolute;inset:0;border-radius:20px;padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6;transition:opacity .25s}
+.mode:hover{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 18px 50px rgba(255,61,139,.35)}
+.mode:hover::before{opacity:1}
+.mode .tag{font-family:Anton,sans-serif;font-size:34px;line-height:1;text-transform:uppercase;letter-spacing:.03em}
+.mode.exam .tag{color:var(--pink)} .mode.prac .tag{color:var(--teal)}
+.mode p{margin:10px 0 14px;color:var(--mute);font-size:14px;line-height:1.5}
+.mode .meta{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line);color:var(--ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:22px 0 4px}
+.chip{cursor:pointer;font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--mute);transition:.2s}
+.chip.on{background:var(--grad);color:#1a0718;border-color:transparent;box-shadow:0 6px 20px rgba(255,61,139,.4)}
+.legend{margin-top:26px;color:var(--mute);font-size:12.5px;max-width:660px;line-height:1.6;padding:12px 16px;border-radius:14px;background:rgba(12,6,22,.78);backdrop-filter:blur(10px);border:1px solid var(--line)}
+/* ---------- HUD ---------- */
+#hud{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 14px;margin:-6px -4px 14px;border-radius:16px;background:rgba(12,6,22,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line)}
+#hud .logo{font-size:24px;cursor:pointer}
+#hud .grow{flex:1}
+.money{font-family:Anton,sans-serif;font-size:26px;color:var(--lime);text-shadow:0 0 14px rgba(125,255,176,.55);letter-spacing:.03em;min-width:90px;text-align:right}
+.stars{display:flex;gap:2px}
+.stars svg{width:18px;height:18px;fill:rgba(255,255,255,.14);transition:fill .3s,filter .3s}
+.stars svg.on{fill:var(--orange);filter:drop-shadow(0 0 6px rgba(255,179,71,.9))}
+.timer{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:14px;padding:6px 10px;border-radius:10px;border:1px solid rgba(255,77,94,.5);color:#ffc3cb}
+.timer.calm{border-color:var(--line);color:var(--mute)}
+/* ---------- Layout ---------- */
+.layout{display:grid;grid-template-columns:1fr 230px;gap:18px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.nav{order:-1}}
+.nav{position:sticky;top:78px;padding:14px;border-radius:18px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(14px)}
+.nav h4{margin:0 0 10px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));grid-auto-rows:38px;gap:6px}
+.nb:focus{outline:none}.nb.cur:focus{outline:2px solid var(--teal)}
+.nb{cursor:pointer;height:38px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--mute);font:700 13px Inter;position:relative;transition:.15s}
+.nb:hover{border-color:var(--pink);color:var(--ink)}
+.nb.cur{outline:2px solid var(--teal);outline-offset:1px;color:var(--ink)}
+.nb.ans{background:rgba(155,92,255,.22);color:var(--ink)}
+.nb.ok{background:rgba(125,255,176,.2);border-color:rgba(125,255,176,.5);color:var(--lime)}
+.nb.part{background:rgba(255,179,71,.18);border-color:rgba(255,179,71,.5);color:var(--orange)}
+.nb.bad{background:rgba(255,77,94,.18);border-color:rgba(255,77,94,.5);color:#ff98a3}
+.navbtns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+/* ---------- Card ---------- */
+.card{position:relative;border-radius:22px;background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:22px 22px 20px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.card::after{content:"";position:absolute;left:22px;right:22px;top:-1px;height:2px;background:var(--grad);border-radius:2px;opacity:.9}
+.card.enter{animation:enter .45s cubic-bezier(.2,.9,.25,1.2)}
+@keyframes enter{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+.card.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.qhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.qnum{font-family:Anton,sans-serif;font-size:30px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.badge{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;border-radius:6px}
+.b-j2ee{background:rgba(45,226,230,.14);color:var(--teal);border:1px solid rgba(45,226,230,.35)}
+.b-spring{background:rgba(125,255,176,.12);color:var(--lime);border:1px solid rgba(125,255,176,.35)}
+.b-mvc{background:rgba(255,61,139,.14);color:#ff8fbb;border:1px solid rgba(255,61,139,.4)}
+.b-src{background:rgba(255,255,255,.06);color:var(--mute);border:1px solid var(--line)}
+.b-deb{background:rgba(255,179,71,.14);color:var(--orange);border:1px solid rgba(255,179,71,.4)}
+.qtext{font-size:16.5px;line-height:1.55;font-weight:500;margin:4px 0 14px}
+.qtext small{color:var(--mute)}
+pre.code{margin:0 0 14px;padding:14px 16px;border-radius:14px;background:rgba(6,2,14,.75);border:1px solid rgba(155,92,255,.25);overflow:auto;font-size:12.8px;line-height:1.55;color:#e8dcff;white-space:pre}
+.hint{font-size:12px;color:var(--dim);margin:0 0 10px;letter-spacing:.04em}
+/* options */
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.035);transition:border-color .15s,background .15s,transform .15s}
+.opt:hover{border-color:rgba(255,61,139,.55);transform:translateX(3px)}
+.opt input{display:none}
+.box{flex:none;width:22px;height:22px;margin-top:1px;border-radius:6px;border:2px solid var(--dim);display:grid;place-items:center;transition:.15s}
+.single .box{border-radius:50%}
+.opt.sel{border-color:var(--pink);background:rgba(255,61,139,.12)}
+.opt.sel .box{border-color:var(--pink);background:var(--pink);box-shadow:0 0 12px rgba(255,61,139,.7)}
+.opt.sel .box::after{content:"";width:8px;height:8px;border-radius:2px;background:#1a0718}
+.single .opt.sel .box::after{border-radius:50%}
+.opt .let{font-weight:800;color:var(--dim);min-width:16px}
+.opt .txt{flex:1;line-height:1.45;font-size:15px}
+.opt pre{margin:0;white-space:pre-wrap;font-size:12.3px;line-height:1.5;color:#efe3ff}
+.opt.right{border-color:rgba(125,255,176,.7);background:rgba(125,255,176,.1)}
+.opt.wrong{border-color:rgba(255,77,94,.7);background:rgba(255,77,94,.1)}
+.opt.missed{border-style:dashed;border-color:rgba(125,255,176,.7)}
+.locked .opt{cursor:default}.locked .opt:hover{transform:none}
+/* selects */
+select.dd{appearance:none;-webkit-appearance:none;font:600 13.5px Inter;color:var(--ink);background:rgba(6,2,14,.8) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ff3d8b'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border:1px solid rgba(155,92,255,.35);border-radius:10px;padding:8px 30px 8px 10px;min-width:150px;max-width:100%;cursor:pointer;transition:.15s}
+select.dd:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,61,139,.25)}
+select.dd.right{border-color:var(--lime);box-shadow:0 0 0 2px rgba(125,255,176,.25)}
+select.dd.wrong{border-color:var(--red);box-shadow:0 0 0 2px rgba(255,77,94,.25)}
+select.dd option{background:#1a0b2b}
+.match{display:flex;flex-direction:column;gap:10px}
+.mrow{display:flex;align-items:center;gap:14px;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid var(--line)}
+.mrow .lab{flex:1;font-size:15px;line-height:1.4}
+.fix{font-size:12px;color:var(--lime);margin-top:4px;font-weight:600}
+/* http */
+.http{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.http{grid-template-columns:1fr}}
+.http .col{padding:14px;border-radius:14px;background:rgba(6,2,14,.5);border:1px solid var(--line)}
+.http h5{margin:0 0 10px;font-family:Anton,sans-serif;font-weight:400;font-size:20px;letter-spacing:.05em;text-transform:uppercase}
+.http .reqh{color:var(--teal)} .http .resh{color:var(--pink)}
+.hrow{display:grid;grid-template-columns:118px 1fr;gap:8px;align-items:center;margin-bottom:7px}
+.hrow label{font-size:12.5px;color:var(--mute);font-family:"JetBrains Mono",monospace}
+.hrow select{min-width:0;width:100%}
+.line1{display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.line1 select{flex:1;min-width:90px}
+.line1 .v{font:600 12px "JetBrains Mono";color:var(--dim)}
+/* composite */
+.part{padding:14px;border-radius:14px;background:rgba(6,2,14,.45);border:1px solid var(--line);margin-bottom:12px}
+.part .pl{font-size:14.5px;line-height:1.5;margin-bottom:10px}
+.inrow{display:flex;gap:12px;flex-wrap:wrap}
+.inrow label{display:flex;align-items:center;gap:7px;font:600 14px "JetBrains Mono";color:var(--mute)}
+.inrow input{width:76px;font:600 15px "JetBrains Mono";color:var(--ink);background:rgba(6,2,14,.8);border:1px solid rgba(155,92,255,.35);border-radius:10px;padding:8px 10px;text-align:center}
+.inrow input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,61,139,.25)}
+.inrow input.right{border-color:var(--lime)} .inrow input.wrong{border-color:var(--red)}
+/* codefill */
+pre.code.fill{white-space:pre;line-height:2.2}
+pre.code.fill select.dd{font:600 12px "JetBrains Mono";padding:3px 26px 3px 8px;min-width:120px;border-radius:7px;vertical-align:middle}
+.fnum{font:700 10px Inter;color:var(--orange);vertical-align:super;margin-right:2px}
+/* order / drag */
+.slots{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;counter-reset:s}
+.slots.row{flex-direction:row;flex-wrap:wrap}
+.slot{counter-increment:s;position:relative;min-height:42px;display:flex;align-items:center;gap:10px;padding:6px 10px 6px 40px;border-radius:12px;border:1.5px dashed rgba(155,92,255,.45);background:rgba(6,2,14,.5);transition:.15s;font-size:13.8px}
+.slots.row .slot{min-width:150px;flex:1}
+.slot::before{content:counter(s);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font:800 11px Inter;background:rgba(155,92,255,.25);color:var(--ink)}
+.slot.over{border-color:var(--pink);background:rgba(255,61,139,.12);transform:scale(1.01)}
+.slot.armed{border-color:var(--teal);box-shadow:0 0 0 2px rgba(45,226,230,.25)}
+.slot.filled{border-style:solid;border-color:rgba(255,61,139,.55);background:rgba(255,61,139,.1)}
+.slot.right{border-color:var(--lime);background:rgba(125,255,176,.1)}
+.slot.wrong{border-color:var(--red);background:rgba(255,77,94,.1)}
+.slot .x{margin-left:auto;cursor:pointer;color:var(--dim);font-weight:800;padding:0 4px}
+.slot .x:hover{color:var(--pink)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.tile{cursor:grab;user-select:none;padding:8px 12px;border-radius:10px;font-size:13px;font-weight:600;background:linear-gradient(135deg,rgba(155,92,255,.35),rgba(255,61,139,.28));border:1px solid rgba(255,255,255,.14);transition:transform .15s,box-shadow .15s,opacity .15s}
+.tile:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,61,139,.35)}
+.tile.picked{outline:2px solid var(--teal);box-shadow:0 0 18px rgba(45,226,230,.6)}
+.tile.used{opacity:.3;pointer-events:none}
+.tile.dragging{opacity:.5}
+/* buttons */
+.actions{display:flex;gap:10px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.btn{cursor:pointer;font:800 13px Inter;letter-spacing:.12em;text-transform:uppercase;padding:13px 20px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);transition:transform .15s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.go{border:none;background:var(--grad);color:#1a0718;box-shadow:0 10px 30px rgba(255,61,139,.45)}
+.btn.go:hover{box-shadow:0 14px 40px rgba(255,61,139,.65)}
+.btn.teal{border-color:rgba(45,226,230,.5);color:var(--teal)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.sm{padding:9px 12px;font-size:11px}
+.grow{flex:1}
+/* feedback */
+.fb{margin-top:16px;padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(6,2,14,.6);animation:enter .4s}
+.fb .verdict{font-family:Anton,sans-serif;font-size:30px;letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px;display:flex;align-items:center;gap:12px}
+.fb.good .verdict{color:var(--lime);text-shadow:0 0 18px rgba(125,255,176,.5)}
+.fb.mid .verdict{color:var(--orange);text-shadow:0 0 18px rgba(255,179,71,.5)}
+.fb.bad .verdict{color:var(--red);text-shadow:0 0 18px rgba(255,77,94,.5)}
+.fb .pts{font-family:"JetBrains Mono";font-size:13px;color:var(--mute)}
+.fb .ex{line-height:1.6;font-size:14.5px;color:#eadff6}
+.fb .ex b{color:#fff}
+.fb .deb{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.3);font-size:13.5px;line-height:1.55;color:#ffe2b8}
+.fb .deb strong{color:var(--orange);letter-spacing:.1em;font-size:11px;text-transform:uppercase;display:block;margin-bottom:3px}
+/* toast */
+#toast{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.6);z-index:60;pointer-events:none;font-family:Anton,sans-serif;font-size:clamp(46px,9vw,96px);letter-spacing:.04em;text-transform:uppercase;opacity:0;white-space:nowrap}
+#toast.show{animation:toast 1.25s cubic-bezier(.2,.9,.3,1.2) forwards}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-4deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(-2deg)}30%{transform:translate(-50%,-50%) scale(1) rotate(-2deg)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-62%) scale(1) rotate(-2deg)}}
+#toast.good{color:var(--lime);text-shadow:0 0 30px rgba(125,255,176,.7),0 6px 0 #0b3a22}
+#toast.bad{color:var(--red);text-shadow:0 0 30px rgba(255,77,94,.7),0 6px 0 #3a0b12}
+#toast.mid{color:var(--orange);text-shadow:0 0 30px rgba(255,179,71,.7),0 6px 0 #3a250b}
+/* end */
+#end{text-align:center;padding-top:6vh}
+#end .logo{font-size:clamp(56px,11vw,128px)}
+#end .logo.fail{background:linear-gradient(100deg,#ff4d5e,#ff2e6e,#9b5cff);-webkit-background-clip:text;background-clip:text}
+.big{font-family:Anton,sans-serif;font-size:72px;color:var(--lime);text-shadow:0 0 24px rgba(125,255,176,.5);margin:14px 0 0}
+.bars{max-width:520px;margin:26px auto 0;display:flex;flex-direction:column;gap:12px;text-align:left}
+.bar .t{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px;color:var(--mute)}
+.bar .tr{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar .fl{height:100%;border-radius:999px;background:var(--grad);width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.endbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.hidden{display:none!important}
+@media (max-width:560px){#hud{gap:8px;padding:8px 10px}#hud .logo{font-size:20px}.stars svg{width:13px;height:13px}.timer{font-size:12px;padding:5px 7px;white-space:nowrap}.timer .tl{display:none}.money{font-size:20px;min-width:0}#hud .pill{display:none}.nav .hint{display:none}.navgrid{grid-auto-rows:34px}.nb{height:34px}.card{padding:18px 14px}.qtext{font-size:15.5px}.mrow{flex-direction:column;align-items:stretch}.hrow{grid-template-columns:100px 1fr}}
+.kbd{font:600 11px "JetBrains Mono";padding:2px 6px;border-radius:5px;border:1px solid var(--line);color:var(--dim)}
+</style>
+</head>
+<body>
+<div id="sky"></div><div id="sun"></div>
+<svg id="palms" viewBox="0 0 1440 360" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12061f"/><stop offset="1" stop-color="#05020a"/></linearGradient></defs>
+  <g fill="url(#pg)">
+    <path d="M0 330 Q360 300 720 318 T1440 312 V360 H0Z"/>
+    <g transform="translate(120 360)"><path d="M-4 0 C0 -90 10 -170 26 -240 L32 -238 C18 -170 10 -90 8 0Z"/><path d="M29 -240 c-40 -20 -90 -10 -120 20 c40 -16 80 -18 118 -14z M29 -240 c30 -36 80 -44 122 -26 c-44 0 -86 12 -118 32z M29 -240 c-10 -40 -50 -66 -96 -66 c40 14 70 36 92 70z M29 -240 c20 -40 60 -58 100 -50 c-36 8 -70 26 -96 54z M29 -240 c-34 6 -60 36 -70 76 c18 -30 40 -54 72 -70z M29 -240 c36 8 58 40 62 80 c-14 -30 -34 -56 -64 -74z"/></g>
+    <g transform="translate(260 360) scale(.72)"><path d="M-4 0 C4 -90 -6 -170 -24 -240 L-18 -242 C2 -170 12 -90 8 0Z"/><path d="M-21 -241 c-40 -20 -90 -10 -120 20 c40 -16 80 -18 118 -14z M-21 -241 c30 -36 80 -44 122 -26 c-44 0 -86 12 -118 32z M-21 -241 c-10 -40 -50 -66 -96 -66 c40 14 70 36 92 70z M-21 -241 c20 -40 60 -58 100 -50 c-36 8 -70 26 -96 54z M-21 -241 c-34 6 -60 36 -70 76 c18 -30 40 -54 72 -70z"/></g>
+    <g transform="translate(1290 360) scale(1.1)"><path d="M-4 0 C2 -90 -10 -170 -30 -240 L-24 -242 C-2 -170 10 -90 8 0Z"/><path d="M-27 -241 c-40 -20 -90 -10 -120 20 c40 -16 80 -18 118 -14z M-27 -241 c30 -36 80 -44 122 -26 c-44 0 -86 12 -118 32z M-27 -241 c-10 -40 -50 -66 -96 -66 c40 14 70 36 92 70z M-27 -241 c20 -40 60 -58 100 -50 c-36 8 -70 26 -96 54z M-27 -241 c-34 6 -60 36 -70 76 c18 -30 40 -54 72 -70z M-27 -241 c36 8 58 40 62 80 c-14 -30 -34 -56 -64 -74z"/></g>
+    <g transform="translate(1150 360) scale(.6)"><path d="M-4 0 C0 -90 10 -170 26 -240 L32 -238 C18 -170 10 -90 8 0Z"/><path d="M29 -240 c-40 -20 -90 -10 -120 20 c40 -16 80 -18 118 -14z M29 -240 c30 -36 80 -44 122 -26 c-44 0 -86 12 -118 32z M29 -240 c-10 -40 -50 -66 -96 -66 c40 14 70 36 92 70z M29 -240 c20 -40 60 -58 100 -50 c-36 8 -70 26 -96 54z"/></g>
+    <g opacity=".75"><rect x="540" y="250" width="26" height="80"/><rect x="570" y="215" width="34" height="115"/><rect x="608" y="262" width="22" height="68"/><rect x="800" y="232" width="30" height="98"/><rect x="834" y="270" width="24" height="60"/><rect x="862" y="200" width="20" height="130"/><rect x="886" y="248" width="30" height="82"/></g>
+  </g>
+</svg>
+<canvas id="fx"></canvas><div class="scan"></div>
+<div id="toast"></div>
+
+<main>
+  <!-- START -->
+  <section id="start">
+    <div class="kicker">Веб програмирање · ФИНКИ · Теорија</div>
+    <h1 class="logo"><span>Vice</span><span>Midterm</span></h1>
+    <p class="sub">Прв колоквиум: HTTP, Servlets и Filters, Scopes, Spring, Spring MVC. Прашањата од твојот документ + Discord базите + испитниот пример од предавање 05, со проверени одговори и објаснувања.</p>
+    <div class="modes">
+      <button class="mode exam" id="mExam">
+        <div class="tag">Exam sim</div>
+        <p>15 случајни прашања во распоредот од е-тестот: J2EE 1-8, Spring 9-10, Spring MVC 11-15. Тајмер 30:00.</p>
+        <div class="meta"><span class="pill">15 прашања</span><span class="pill">8 · 2 · 5</span><span class="pill">30 мин</span></div>
+      </button>
+      <button class="mode prac" id="mPrac">
+        <div class="tag">Practice</div>
+        <p>Целиот фонд по тема. Провери го секое прашање и прочитај го објаснувањето.</p>
+        <div class="meta"><span class="pill" id="poolCount">37 прашања</span><span class="pill">без тајмер</span></div>
+      </button>
+    </div>
+    <div class="chips" id="topicChips"></div>
+    <div class="chips" id="srcChips" style="margin-top:6px"></div>
+    <p class="legend">Филтрите важат за Practice. <span class="badge b-deb">Debated</span> значи дека Discord изворите се расправаат: прифатен е технички точниот одговор, а другото мислење е наведено во објаснувањето.<br>Бодување како Moodle: делумни поени кај multi-select (погрешен избор одзема), dropdown и редоследи по поле.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden">
+    <div id="hud">
+      <div class="logo" id="home" title="Почеток">VM</div>
+      <span class="pill" id="modeLbl">Practice</span>
+      <div class="grow"></div>
+      <div class="stars" id="stars"></div>
+      <div class="timer calm" id="timer">00:00</div>
+      <div class="money" id="money">$0</div>
+    </div>
+    <div class="layout">
+      <div id="cardWrap"></div>
+      <aside class="nav">
+        <h4>Навигација</h4>
+        <div class="navgrid" id="navgrid"></div>
+        <div class="navbtns">
+          <button class="btn sm teal" id="finish">Заврши мисија</button>
+          <button class="btn sm" id="reset">Ресетирај</button>
+        </div>
+        <p class="hint" style="margin-top:12px"><span class="kbd">←</span> <span class="kbd">→</span> навигација · <span class="kbd">Enter</span> провери</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="hidden">
+    <div class="kicker" id="endKick">Резултат</div>
+    <h1 class="logo" id="endTitle">Mission Passed</h1>
+    <div class="big" id="endScore">0 / 0</div>
+    <p class="sub" id="endSub" style="margin:8px auto 0"></p>
+    <div class="bars" id="endBars"></div>
+    <div class="endbtns">
+      <button class="btn go" id="reviewWrong">Повтори ги грешните</button>
+      <button class="btn" id="reviewAll">Прегледај ги сите</button>
+      <button class="btn teal" id="again">Нова мисија</button>
+    </div>
+  </section>
+</main>
+
+<script>
+// Topic: j2ee (HTTP, Servlets, Filters, Scopes), spring (core), mvc (Spring MVC)
+// src: doc = од твојот документ, discord = Discord бази, lecture = предавање 05
+const HTTP_CT = ["не постои","application/json","application/x-www-form-urlencoded","application/pdf","multipart/form-data","text/html","text/css"];
+const HTTP_CL = ["не постои","нумеричка вредност"];
+const HTTP_BODY = ["не постои","нумеричка вредност","низа од бајти/знаци"];
+const HTTP_COOKIE = ["не постои","низа од бајти/знаци"];
+const HTTP_STATUS = ["200 OK","302 Redirect","403 Forbidden","404 Not Found","500 Server Error"];
+const HTTP_SERVER = ["Apache","Nginx","CentOS","Windows","Linux","Android","UNIX"];
+const HTTP_METHOD = ["GET","POST","PUT","DELETE"];
+
+const SPRING_ANN = ["ниту едно","@Autowired","@Bean","@Component","@ComponentScan","@Configuration","@Controller","@Inject","@Primary","@Profile(\"tmf\")","@Qualifier(\"app.name\")","@Qualifier(\"fcseStudents\")","@Qualifier(\"tmfStudents\")","@Repository","@Resource","@Service","@Value","@Value(\"${app.name}\")","@Value(\"app.name\")"];
+
+const QUESTIONS = [
+/* ===================== ОД ДОКУМЕНТОТ (15) ===================== */
+{ id:"d1", topic:"j2ee", src:"doc", type:"multi",
+  q:"Доколку серверот успешно враќа JSON како резултат, кои од следните тврдења се точни?",
+  options:["Одговорот е со status code 404","Клиентот го детектира типот на податоците од содржината во телото на одговорот","Одговорот е со status code 500","Одговорот е со status code 200","Одговорот содржи ContentType параметар со вредност application/json","Одговорот содржи ContentType заглавје со вредност application/json"],
+  correct:[3,5],
+  explain:"Успешен одговор = <b>200 OK</b>. Типот на содржината клиентот го дознава од <b>заглавјето</b> Content-Type, а не од телото. Content-Type е <b>заглавје (header)</b>, не параметар, затоа (e) е грешно, а (f) точно.",
+  debated:"Една Discord верзија го брои и (b). Не е точно: прелистувачот не го погодува типот од телото, туку го чита Content-Type заглавјето." },
+
+{ id:"d2", topic:"j2ee", src:"doc", type:"multi",
+  q:"Кои од следните настани треба да се извршат пред да може да се креираат Request и Response објектите кај една апликација во J2EE Container?",
+  options:["Креирање на Servlet Context","Повикување на service() од сервлетите","Поставување на параметри во Servlet Context","Читање на web.xml","Иницијализација на сервлетите"],
+  correct:[0,2,3,4],
+  explain:"При deploy контејнерот: го чита <b>web.xml</b>, го креира <b>ServletContext</b>, ги поставува контекстните параметри (&lt;context-param&gt;) и ги иницијализира сервлетите (init). Дури потоа може да пристигне барање за кое се креираат Request/Response. <b>service()</b> се повикува ПОСЛЕ креирањето на Request и Response, затоа него го нема.",
+  debated:"Една верзија не го брои „поставување параметри“. Тие доаѓаат од &lt;context-param&gt; во web.xml и се поставуваат заедно со креирањето на контекстот, значи пред барањето." },
+
+{ id:"d3", topic:"j2ee", src:"doc", type:"multi",
+  q:"Кој додава HTML во одговорот?",
+  options:["Web Server","Container","Servlet"],
+  correct:[2],
+  explain:"<b>Сервлетот</b> го генерира HTML-от и го запишува во телото на одговорот (response.getWriter()). Контејнерот само го менаџира животниот циклус и ги креира Request/Response, а веб серверот сервира статична содржина.",
+  debated:"Некои стават и Container. Контејнерот не пишува HTML, само го испраќа одговорот што сервлетот го пополнил." },
+
+{ id:"d4", topic:"j2ee", src:"doc", type:"single",
+  q:"Доколку сакате да се де-регистрирате за добивање на пораки на одреден Publisher на податоци, во кој метод од сервлетот ќе го сторите тоа?",
+  options:["init","Конструктор","service","doPost","doGet","destroy"],
+  correct:[5],
+  explain:"Регистрацијата кај Publisher (subscribe) се прави еднаш во <b>init()</b>, а одјавата (unsubscribe) е чистење ресурси пред сервлетот да се уништи, значи <b>destroy()</b>. Тоа е пар: init ↔ destroy.",
+  debated:"maco/Discord го означува doPost (како корисник да праќа барање за одјава). Прашањето е за сервлетот што е претплатен, па логичниот пар на init е destroy." },
+
+{ id:"d5", topic:"j2ee", src:"doc", type:"multi",
+  q:"Селектирајте ги исказите кои ги опишуваат Attribute во J2EE контејнерот.",
+  options:["Тип Object","Тип String","Може да се променат во филтрите","Не може да се променат во филтрите","Овозможуваат структурирање на кодот според MVC шаблонот"],
+  correct:[0,2,4],
+  explain:"Атрибутите: тип <b>Object</b>, може да се менуваат (setAttribute) во сервлети и филтри, и преку нив се пренесува моделот кон погледот, што овозможува <b>MVC</b>. Параметрите се String и read-only." },
+
+{ id:"d6", topic:"j2ee", src:"doc", type:"multi",
+  q:"Доколку во ServletA повикаме <code>dispatcherToServletB.forward(req, resp)</code>, што од следното е точно:",
+  options:["Во ServletB можеме да ги пристапиме параметрите пратени до ServletA","Контејнерот ќе го повика сервлетот мапиран на servletB.do","Клиентот ќе направи ново барање до /servletB.do","Во ServletB можеме да ги пристапиме Session атрибутите поставени во ServletA","Во ServletB можеме да ги пристапиме Request атрибутите поставени во ServletA"],
+  correct:[0,1,3,4],
+  explain:"forward() е <b>внатрешно</b> препраќање на серверот: истиот request и response се предаваат на ServletB, кој го повикува контејнерот. Затоа параметрите, request и session атрибутите се достапни. Клиентот <b>не</b> прави ново барање (тоа е sendRedirect).",
+  debated:"Една верзија не го брои (b). forward-от токму го прави контејнерот: тој го повикува сервлетот мапиран на таа патека." },
+
+{ id:"d7", topic:"j2ee", src:"doc", type:"multi",
+  q:"Во кои од следните сценарија логично е атрибутите да се чуваат во Request?",
+  options:["Јазикот на корисникот","Контакт информации за страната","Резултати од пребарување","Подржани валути за плаќање","ID на тековната сесија"],
+  correct:[2],
+  explain:"Request scope = податок што важи само за <b>едно барање</b>. Резултатите од пребарување се пресметуваат и прикажуваат во тоа барање. Контакт инфо и валути се исти за сите (application), а јазикот и ID на сесија важат за целата сесија (session).",
+  debated:"Во Discord кружат b+d и a+c. Контакт инфо и валути се класичен пример за ServletContext (види го прашањето за application scope)." },
+
+{ id:"d8", topic:"j2ee", src:"doc", type:"multi",
+  q:"Ист корисник (ист прелистувач) во неколку последователни барања (без затворање на прелистувачот) има пристап до ист податок зачуван во:",
+  options:["Session","Cookie","Request","ServletContext (application context)","Query String"],
+  correct:[0,1,3],
+  explain:"Session и Cookie траат низ повеќе барања од ист прелистувач, а ServletContext е заеднички за сите барања. Request и Query String живеат само едно барање." },
+
+{ id:"d9", topic:"spring", src:"doc", type:"single",
+  q:"Доколку сакаме да креираме bean од кој ќе се креира само една инстанца и оваа инстанца ќе се користи секаде каде што треба, тогаш треба да го конфигурираме:",
+  options:["scope=\"prototype\"","scope=\"context\"","scope=\"instance\"","scope=\"singleton\""],
+  correct:[3],
+  explain:"<b>singleton</b> е стандардниот scope: една инстанца по контејнер, споделена насекаде. prototype прави нова инстанца при секое барање на бинот." },
+
+{ id:"d10", topic:"spring", src:"doc", type:"match",
+  q:"Поврзете ги дефинициите со концептите од Aspect Oriented Programming (AOP):",
+  items:[{label:"Место во извршувањето на апликацијата каде се вклучува аспектот",answer:"Join Point"},{label:"Дефинира која задача и кога ќе се изврши",answer:"Advice"},{label:"Дефинира каде може да се изврши аспектот",answer:"Pointcut"}],
+  choices:["Advice","Pointcut","Join Point"],
+  explain:"<b>Join Point</b> = точка во извршувањето (повик на метод). <b>Advice</b> = што и кога (before/after/around). <b>Pointcut</b> = израз кој избира КАДЕ (на кои join points) се применува аспектот." },
+
+{ id:"d11", topic:"mvc", src:"doc", type:"single",
+  q:"Во кој од подолу предложените слоеви е најлогично да биде следната имплементација:",
+  code:"public void employeesCards(List<Employee> employees, HttpServletResponse response)\n        throws DocumentException, IOException, SQLException {\n\n    ByteArrayOutputStream baos = new ByteArrayOutputStream();\n    IDMultiCardsReport report = new IDMultiCardsReport(\"id_cards_multi\", baos, context, employees);\n    report.generate();\n    new ResponseWriter(response).writePdf(baos, \"id_cards\");\n}",
+  options:["Domain Model","Persistence","Presentation","Service","User Interface"],
+  correct:[2],
+  explain:"Методот работи со <b>HttpServletResponse</b> и запишува PDF во одговорот, значи се грижи за тоа како се прикажува информацијата кон клиентот: <b>Presentation</b> (веб слој)." },
+
+{ id:"d12", topic:"mvc", src:"doc", type:"multi",
+  q:"REST контролерот ConsultationSlotApi е мапиран на <code>/api/consultations</code>. Апликацијата е стартувана на порта 8080. Кои од прикажаните методи успешно ќе го обработат PATCH барањето?",
+  code:"PATCH http://localhost:8080/api/consultations/{{slotId}}\nprofessorId: petko.petkov\nContent-Type: application/x-www-form-urlencoded\n\nroomName=117&dayOfWeek=2&from=18:00:00&to=20:00:00\n\n// Како опционален параметар може да се прати и date (LocalDate).",
+  options:[
+   "@RequestMapping(value=\"{pathId}\", method = RequestMethod.PATCH)\npublic ConsultationSlot updateSlot(@PathVariable int slotId,\n    @RequestHeader String professorId,\n    @RequestParam String roomName,\n    @RequestParam(value = \"dayOfWeek\") Integer dayOfWeek,\n    @RequestParam(value = \"date\", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate date,\n    @RequestParam(\"from\") @DateTimeFormat(iso = ISO.TIME) LocalTime from,\n    @RequestParam(\"to\") @DateTimeFormat(iso = ISO.TIME) LocalTime to)",
+   "@PatchMapping(\"/{slotId}\")\npublic ConsultationSlot updateSlot(@PathVariable int slotId,\n    @RequestHeader String professorId,\n    @RequestParam String roomName,\n    @RequestParam(value = \"dayOfWeek\") Integer dayOfWeek,\n    @RequestParam(value = \"date\") @DateTimeFormat(iso = ISO.DATE) LocalDate date,\n    @RequestParam(\"from\") @DateTimeFormat(iso = ISO.TIME) LocalTime from,\n    @RequestParam(\"to\") @DateTimeFormat(iso = ISO.TIME) LocalTime to)",
+   "@PatchMapping(\"/{slotId}\")\npublic ConsultationSlot updateSlot(@PathVariable int slotId,\n    @RequestHeader String professorId,\n    @RequestParam String roomName,\n    @RequestParam(value = \"dayOfWeek\", required = false) Integer dayOfWeek,\n    @RequestParam(value = \"date\", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate date,\n    @RequestParam(\"from\") @DateTimeFormat(iso = ISO.TIME) LocalTime from,\n    @RequestParam(\"to\") @DateTimeFormat(iso = ISO.TIME) LocalTime to)",
+   "@PatchMapping(\"/{slotId}\")\npublic ConsultationSlot updateSlot(@RequestParam int slotId,\n    @RequestHeader String professorId,\n    @RequestParam String roomName,\n    @RequestParam(value = \"dayOfWeek\", required = true) Integer dayOfWeek,\n    @RequestParam(value = \"date\", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate date,\n    @RequestParam(\"from\") @DateTimeFormat(iso = ISO.TIME) LocalTime from,\n    @RequestParam(\"to\") @DateTimeFormat(iso = ISO.TIME) LocalTime to)"],
+  codeOptions:true,
+  correct:[2],
+  explain:"(a) мапирањето е {pathId}, а @PathVariable бара <b>slotId</b>, па нема да се поврзе. (b) date е задолжителен (required=true по default), а е опционален во барањето. (d) slotId е во патеката, не е @RequestParam. Само (c) е во ред (required=false на dayOfWeek не пречи, бидејќи се праќа).",
+  debated:"Една верзија го брои и (a). Имињата не се совпаѓаат (pathId ≠ slotId), па Spring не може да го пополни slotId." },
+
+{ id:"d13", topic:"mvc", src:"doc", type:"multi",
+  q:"Доколку имаме потреба кон клиентот да го вратиме Header-от „user“ во рамките на мапиран метод во Spring MVC, во кој од следните методи е можно да го поставиме?",
+  options:[
+   "@RequestMapping(\"question\")\npublic String question(HttpSession session, ServletContext context)",
+   "@RequestMapping(\"question\")\npublic String question(@Header String session)",
+   "@RequestMapping(\"question\")\npublic String question(HttpServletRequest request)",
+   "@RequestMapping(\"question\")\npublic String question(@RequestHeader(name=\"user\") String user)",
+   "@RequestMapping(\"question\")\npublic String question(HttpServletResponse context)"],
+  codeOptions:true,
+  correct:[4],
+  explain:"Да <b>вратиме</b> header кон клиентот = да го запишеме во <b>одговорот</b>: response.setHeader(\"user\", ...). Тоа е можно само со HttpServletResponse. @RequestHeader и HttpServletRequest само го <b>читаат</b> header-от од барањето. @Header не постои.",
+  debated:"Во Discord се спомнуваат (c) и (d). Тие читаат header од барањето, а не поставуваат во одговорот." },
+
+{ id:"d14", topic:"mvc", src:"doc", type:"single",
+  q:"Барањето кон нашиот сервис е <code>GET http://localhost:8080/exam/answer/12?answer=xyz</code>, а контролерот е:",
+  code:"@Controller(\"exam\")\n@RequestMapping(\"/exam\")\npublic class ExamController {\n}",
+  qAfter:"Кое од следните е валидна дефиниција на метод кој ќе се справи со ова барање?",
+  options:[
+   "@RequestMapping(value = \"/exam/answer/{id}?answer={answer}\", method = RequestMethod.GET)\npublic String question(@RequestParam Long id, @RequestParam String answer)",
+   "@RequestMapping(value = \"/answer/{id}?answer={answer}\", method = RequestMethod.GET, produces = \"application/json\")\npublic String question(@RequestParam Long id, @RequestParam String answer)",
+   "@RequestMapping(value = \"/answer/{id}?{answer}\", method = RequestMethod.GET, produces = \"application/json\")\npublic String question(@PathVariable Long id, @PathVariable String answer)",
+   "@RequestMapping(value = \"/exam/answer/{id}\", method = RequestMethod.GET, produces = \"application/json\")\npublic String question(@PathVariable Long id, @RequestParam String answer)",
+   "@RequestMapping(value = \"/answer/{id}\", method = RequestMethod.GET, produces = \"application/json\")\npublic String question(@PathVariable Long id, @RequestParam String answer)"],
+  codeOptions:true,
+  correct:[4],
+  explain:"Класата веќе е на /exam, па методот е <b>/answer/{id}</b> (a и d би дале /exam/exam/...). 12 е дел од патеката → <b>@PathVariable</b>. answer=xyz е query параметар → <b>@RequestParam</b> и НЕ се пишува во мапирањето. Точно: (e)." },
+
+{ id:"d15", topic:"mvc", src:"doc", type:"single",
+  q:"Нека во веб апликација е поставена следната конфигурација на view-resolver:",
+  code:"<bean class=\"org.springframework.web.servlet.view.InternalResourceViewResolver\">\n    <property name=\"prefix\" value=\"/WEB-INF/views/\"/>\n    <property name=\"suffix\" value=\".html\"/>\n</bean>\n\n@Controller\n@RequestMapping(\"/exam\")\npublic class ExamController {\n    @RequestMapping(value = \"/question\", method = RequestMethod.POST)\n    public String question() {\n        return \"view\";\n    }\n}",
+  qAfter:"Која ќе биде датотеката која ќе се избере од ViewResolver-от за приказ при повик на question()?",
+  options:["src/main/resources/views/question.html","Нема да се селектира ниту една датотека, ќе се изврши редирекција","src/main/resources/views/view.html","src/main/resources/WEB-INF/views/view.html","src/main/resources/WEB-INF/views/question.html","Нема да се селектира ниту една датотека, ќе се генерира JSON"],
+  correct:[3],
+  explain:"Патеката = prefix + <b>вратеното име</b> + suffix = /WEB-INF/views/ + <b>view</b> + .html. Името на методот (question) и мапирањето не играат улога, важи само return вредноста." },
+
+/* ===================== ОД DISCORD БАЗИТЕ ===================== */
+{ id:"x1", topic:"mvc", src:"discord", type:"single",
+  q:"Во кој слој припаѓаат класите од Spring MVC анотирани со @Controller?",
+  options:["Presentation","Persistence","User Interface","Domain Model","Service"],
+  correct:[0],
+  explain:"Контролерите ги примаат HTTP барањата и одлучуваат кој поглед/модел се враќа, затоа се дел од <b>Presentation</b> (веб) слојот. User Interface е самиот прелистувач/HTML." },
+
+{ id:"x2", topic:"mvc", src:"discord", type:"multi",
+  q:"Доколку имаме потреба да пристапиме до сесиски атрибут \"user\" во рамките на мапиран метод во Spring MVC, во кој од следните методи е можно да го пристапиме атрибутот?",
+  options:[
+   "@RequestMapping(\"question\")\npublic String question(HttpServletRequest request)",
+   "@RequestMapping(\"question\")\npublic String question(ServletContext context)",
+   "@RequestMapping(\"question\")\npublic String question(HttpSession session, ServletContext context)",
+   "@RequestMapping(\"question\")\npublic String question(@Session HttpSession session)",
+   "@RequestMapping(\"question\")\npublic String question(@SessionAttribute(name=\"user\") Object user)"],
+  codeOptions:true,
+  correct:[0,2,4],
+  explain:"(a) request.getSession().getAttribute(\"user\"). (c) HttpSession директно како параметар. (e) @SessionAttribute го вметнува атрибутот. ServletContext е application scope, не сесија, а @Session не постои.",
+  debated:"Една Discord верзија има само a и e. HttpSession како параметар (c) Spring MVC го поддржува, па и (c) работи." },
+
+{ id:"x3", topic:"mvc", src:"discord", type:"single",
+  q:"На кое URL ќе треба да се направи барање за да се пристапи методот (апликацијата е на localhost:8080/):",
+  code:"@RequestMapping(value = {\"/search\"}, method = RequestMethod.GET)\npublic String search(\n    @RequestParam String query,\n    Model model\n) { ... }",
+  options:["GET http://localhost:8080/search/model?query=text","GET http://localhost:8080/search?query=text&model=","GET http://localhost:8080/search?query=text","GET http://localhost:8080/search/query"],
+  correct:[2],
+  explain:"query е @RequestParam → оди во query string. <b>Model</b> не е параметар од барањето, Spring сам го вметнува. Значи само /search?query=text." },
+
+{ id:"x4", topic:"mvc", src:"discord", type:"multi",
+  q:"Кои искази се точни за Spring MVC?",
+  options:["Spring MVC ги процесира барањата преку DispatcherServlet-от","Spring MVC ги процесира барањата преку DispatcherFilter-от","Spring MVC ги вчитува зависностите (bean) преку ContextLoaderListener од локацијата дефинирана во contextConfigLocation параметарот","Spring MVC ги вчитува зависностите (bean) од локацијата дефинирана во contextConfigLocation сервлет иницијализацискиот параметар"],
+  correct:[0,2,3],
+  explain:"Влезна точка е <b>DispatcherServlet</b> (DispatcherFilter не постои). Root контекстот го вчитува <b>ContextLoaderListener</b> од context-param contextConfigLocation, а DispatcherServlet својот WebApplicationContext го вчитува од <b>init-param</b> contextConfigLocation. И двете се точни.",
+  debated:"Одговорените PDF-ови го означуваат само a и c. И (d) е точно: тоа е конфигурацијата на самиот DispatcherServlet." },
+
+{ id:"x5", topic:"mvc", src:"discord", type:"single",
+  q:"Нека е поставена следната конфигурација на view-resolver:",
+  code:"<bean class=\"org.springframework.web.servlet.view.InternalResourceViewResolver\">\n    <property name=\"prefix\" value=\"/WEB-INF/views/\"/>\n    <property name=\"suffix\" value=\".jsp\"/>\n</bean>\n\n@Controller\n@RequestMapping(\"/exam\")\npublic class ExamController {\n    @RequestMapping(value = \"/question\", method = RequestMethod.POST)\n    public String question() {\n        return \"question\";\n    }\n}",
+  qAfter:"Која датотека ќе се избере за приказ при повик на question()?",
+  options:["/views/question.jsp","Нема да се селектира ниту една датотека, ќе се генерира JSON","Нема да се селектира ниту една датотека, ќе се изврши редирекција","/WEB-INF/jsp/question.jsp","/WEB-INF/views/question.jsp"],
+  correct:[4],
+  explain:"prefix + return + suffix = /WEB-INF/views/ + question + .jsp." },
+
+{ id:"x6", topic:"mvc", src:"discord", type:"single",
+  q:"Во кој од подолу предложените слоеви е најлогично да биде следната имплементација:",
+  code:"public List<User> getAllUsers() throws IOException {\n    File usersSource = new File(SOURCE_PATH);\n    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(usersSource)));\n    CSVFormat format = CSVFormat.DEFAULT.withHeader().withDelimiter(',');\n    CSVParser parser = new CSVParser(br, format);\n    List<User> users = new ArrayList<User>();\n    for (CSVRecord record : parser)\n        users.add(parseUser(record));\n    parser.close();\n    br.close();\n    return users;\n}",
+  options:["User Interface","Service","Persistence","Domain Model","Presentation"],
+  correct:[2],
+  explain:"Кодот <b>чита податоци од складиште</b> (CSV датотека) и ги мапира во објекти. Тоа е работа на <b>Persistence</b> (repository) слојот." },
+
+{ id:"x7", topic:"spring", src:"discord", type:"multi",
+  q:"Кои од следните анотации ги вклучуваат класите во Spring контекстот?",
+  options:["@Bean","@Service","@Singleton","@Context","@Prototype","@Configuration"],
+  correct:[1,5],
+  explain:"<b>@Service</b> и <b>@Configuration</b> (обете се @Component) се ставаат на <b>класа</b> и component scan ја регистрира. @Bean се става на <b>метод</b> и го регистрира вратениот објект, не класата. @Singleton, @Context, @Prototype не се Spring stereotype анотации.",
+  debated:"Одговорениот PDF го брои и @Bean. Слајдот од предавање 5 вели: @Component и подтиповите на класи, @Bean на методи." },
+
+{ id:"x8", topic:"spring", src:"discord", type:"multi",
+  q:"Кои од следните анотации ги вклучуваат класите во Spring контекстот?",
+  options:["@Singleton","@Bean","@Context","@Configuration","@Component","@Prototype"],
+  correct:[3,4],
+  explain:"Варијанта од хартиениот колоквиум. Класа во контекст ставаат <b>@Component</b> и неговите подтипови (@Configuration, @Service, @Repository, @Controller). @Bean е на метод.",
+  debated:"Исто како претходното: @Bean регистрира бин од метод, не ја означува класата." },
+
+{ id:"x9", topic:"j2ee", src:"discord", type:"multi",
+  q:"Во кои од следните сценарија логично е атрибутите да се чуваат во Servlet Context (application scope)?",
+  options:["Подржани валути за плаќање","ID на тековната сесија","Корисничкото име при најава","Јазикот на корисникот","Резултати од пребарување","Контакт информации за страната"],
+  correct:[0,5],
+  explain:"Application scope = исто за <b>сите корисници</b>. Валутите и контакт инфото не зависат од корисникот. Корисничко име, јазик и ID на сесија се по корисник (session), резултатите се по барање (request)." },
+
+{ id:"x10", topic:"j2ee", src:"discord", type:"multi",
+  q:"Различни корисници од различни прелистувачи (browsers) имаат пристап до ист податок зачуван во:",
+  options:["Request","Session","Query String","ServletContext (application context)","Cookie"],
+  correct:[3],
+  explain:"Само <b>ServletContext</b> е заеднички за сите корисници. Session и Cookie се по прелистувач, Request и Query String по барање." },
+
+{ id:"x11", topic:"j2ee", src:"discord", type:"match",
+  q:"Селектирајте дали исказите опишуваат Attribute или Parameter во J2EE контејнерот.",
+  items:[{label:"Тип String",answer:"Parameter"},{label:"Може да се променат во сервлетите",answer:"Attribute"},{label:"Не може да се променат во сервлетите",answer:"Parameter"},{label:"Тип Object",answer:"Attribute"},{label:"Овозможуваат структурирање на кодот според MVC шаблонот",answer:"Attribute"}],
+  choices:["Attribute","Parameter"],
+  explain:"Параметар: String, read-only (се поставува во web.xml/анотации или од клиентот). Атрибут: Object, getAttribute/setAttribute, пренесува модел кон погледот (MVC)." },
+
+{ id:"x12", topic:"j2ee", src:"discord", type:"single",
+  q:"Доколку сакате да се регистрирате за добивање на пораки на одреден Publisher на податоци, во кој метод од сервлетот ќе го сторите тоа?",
+  options:["Конструктор","doPost","service","init","doGet","destroy"],
+  correct:[3],
+  explain:"Еднократна иницијализација (отворање конекции, претплата) се прави во <b>init()</b>, кој се повикува еднаш по креирањето на сервлетот. Во конструкторот ServletConfig/контекстот уште не е достапен." },
+
+{ id:"x13", topic:"j2ee", src:"discord", type:"multi",
+  q:"Доколку во ServletB повикаме <code>response.sendRedirect(\"/servletC.do\")</code>, што од следното е точно?",
+  options:["Контејнерот ќе го повика сервлетот мапиран на servletC.do","Во ServletC можеме да ги пристапиме Session атрибутите поставени во ServletB","Во ServletC можеме да ги пристапиме параметрите пратени до ServletB","Во ServletC можеме да ги пристапиме Request атрибутите поставени во ServletB","Клиентот ќе направи ново барање до /servletC.do"],
+  correct:[0,1,4],
+  explain:"Redirect = одговор 302, па <b>клиентот прави ново барање</b>, кое контејнерот го доделува на сервлетот за /servletC.do. Новото барање е нов request објект, па старите параметри и request атрибути се губат. Сесијата останува (истото session cookie се праќа)." },
+
+{ id:"x14", topic:"j2ee", src:"discord", type:"multi",
+  q:"Кој го координира процесот за креирање на динамичка содржина?",
+  options:["Servlet","Web Server","Container"],
+  correct:[2],
+  explain:"<b>Контејнерот</b> ги прима барањата од веб серверот, креира Request/Response, го избира сервлетот и го менаџира. Сервлетот само ја генерира содржината, веб серверот сервира статични датотеки." },
+
+{ id:"x15", topic:"mvc", src:"discord", type:"single",
+  q:"Даден е контролерот. Апликацијата е стартувана во контејнер со URL http://localhost:8080/app/. Со кој од следните повици може да ја видиме страната (вратена од методот)?",
+  code:"@Controller\n@RequestMapping(\"/exam\")\npublic class ExamController {\n\n    @RequestMapping(value = \"/question/{id}\", method = RequestMethod.GET, produces = \"application/json\")\n    public String question(@PathVariable Long id, @RequestParam String answer) {\n        return \"question\";\n    }\n}",
+  options:["GET http://localhost:8080/app/question?id=12&answer=xyz","GET http://localhost:8080/app/exam/question/1","GET http://localhost:8080/app/exam/12","GET http://localhost:8080/app/exam/question/5?answer=xyz"],
+  correct:[3],
+  explain:"Контекст /app + класа /exam + метод /question/{id}. answer е задолжителен @RequestParam, па мора ?answer=... Затоа само (d). (b) нема answer → 400 Bad Request." },
+
+{ id:"x16", topic:"spring", src:"discord", type:"order",
+  q:"Подредете ги настаните од животниот циклус на Bean-овите во Spring Container-от по редослед на извршување.",
+  tiles:["Иницијализација (Initialize)","Поставување на својствата (Populate Properties)","setBeanName од BeanNameAware","setBeanFactory од BeanFactoryAware","setApplicationContext од ApplicationContextAware","postProcessBeforeInitialization од BeanPostProcessor","Повик на иницијализациските методи (@PostConstruct)","afterPropertiesSet од InitializingBean","postProcessAfterInitialization од BeanPostProcessor","Bean-от е креиран и постои во контејнерот","Повик на методите за уништување (@PreDestroy)","destroy од DisposableBean"],
+  reuse:false,
+  answers:[[0,1,2,3,4,5,6,7,8,9,10,11],[0,1,2,3,4,5,7,6,8,9,10,11],[0,1,2,3,4,5,6,7,8,9,11,10],[0,1,2,3,4,5,7,6,8,9,11,10]],
+  explain:"Instantiate → Populate → BeanNameAware → BeanFactoryAware → ApplicationContextAware → BeanPostProcessor before → init → BeanPostProcessor after → бинот е подготвен → при гасење: уништување. Според Spring и предавање 5, <b>@PostConstruct</b> се извршува во BeanPostProcessor-before фазата, значи пред afterPropertiesSet, а <b>@PreDestroy</b> пред DisposableBean.destroy().",
+  debated:"Старите Discord клучеви имаат afterPropertiesSet пред @PostConstruct и обратен редослед на destroy/@PreDestroy. Затоа тие две замени се прифатени како точни, но вистинскиот редослед во Spring е како во објаснувањето." },
+
+/* ---- HTTP задачи ---- */
+{ id:"h1", topic:"j2ee", src:"discord", type:"http",
+  q:"Клиент кликнува на линкот <code>wp.mk/jan/ispit/1?termin=prv</code> кој се наоѓа на страната wp.mk/main.html. Како резултат на барањето, серверот ја враќа истата страница, но со модифицирана содржина.<br>Пополнете ги полињата за барањето кое го генерира прелистувачот и одговорот кој пристигнува од серверот. <b>Клиентот прв пат пристапува до сајтот.</b>",
+  req:{ method:["GET",HTTP_METHOD], uri:["/jan/ispit/1?termin=prv",["/jan/ispit/1?termin=prv","/jan/ispit/1","wp.mk/main.html","/main.html","/ispit"]],
+        Host:["wp.mk",["wp.mk","wp.mk/main.html","main.html","localhost"]], ContentType:["не постои",HTTP_CT], ContentLength:["не постои",HTTP_CL],
+        Referer:["wp.mk/main.html",["не постои","wp.mk/main.html","wp.mk/jan/ispit/1","wp.mk"]], Cookie:["не постои",HTTP_COOKIE], Body:["не постои",HTTP_BODY] },
+  res:{ status:["200 OK",HTTP_STATUS], Server:[["Apache","Nginx"],HTTP_SERVER], ContentType:["text/html",HTTP_CT], ContentLength:["нумеричка вредност",HTTP_CL],
+        Location:["не постои",["не постои","wp.mk/main.html","wp.mk/jan/ispit/1"]], Body:["низа од бајти/знаци",HTTP_BODY] },
+  explain:"Клик на линк = <b>GET</b>, параметрите се во URI-то, па нема тело, ContentType ни ContentLength. Referer = страната каде е линкот. Прв пат → <b>нема Cookie</b>. Серверот враќа страница (HTML) → 200 OK, text/html, тело со бајти и неговата должина. Location постои само кај 3xx. Веб сервер е Apache/Nginx (CentOS, Linux... се оперативни системи)." },
+
+{ id:"h2", topic:"j2ee", src:"discord", type:"http",
+  q:"Клиент кликнува на копчето <b>Download pdf</b> на страната wp.mk/index.html за да симне pdf датотека. Барањето го опслужува <code>wp.mk/download</code>.<br>Пополнете ги полињата за барањето и одговорот. <b>Клиентот веќе пристапил до сајтот неколку пати.</b>",
+  req:{ method:["GET",HTTP_METHOD], uri:["/download",["/download","wp.mk/download.pdf","/index.html","wp.mk/index.html","/download.pdf"]],
+        Host:["wp.mk",["wp.mk","wp.mk/index.html","/download"]], ContentType:["не постои",HTTP_CT], ContentLength:["не постои",HTTP_CL],
+        Referer:["wp.mk/index.html",["не постои","wp.mk/index.html","wp.mk/download"]], Cookie:["низа од бајти/знаци",HTTP_COOKIE], Body:["не постои",HTTP_BODY] },
+  res:{ status:["200 OK",HTTP_STATUS], Server:[["Apache","Nginx"],HTTP_SERVER], ContentType:["application/pdf",HTTP_CT], ContentLength:["нумеричка вредност",HTTP_CL],
+        Location:["не постои",["не постои","wp.mk/index.html","wp.mk/download"]], Body:["низа од бајти/знаци",HTTP_BODY] },
+  explain:"Симнување = <b>GET</b> без тело (ContentType и ContentLength не постојат во барањето; application/x-www-form-urlencoded е за POST форми). Веќе пристапувал → има Cookie. Одговорот ја носи самата датотека: <b>application/pdf</b>, нумеричка должина, тело со бајти. multipart/form-data е за праќање датотеки ОД клиентот, не во одговор." },
+
+{ id:"h3", topic:"j2ee", src:"discord", type:"http",
+  q:"Клиент кликнува на копчето <b>Upload</b> откако претходно одбрал pdf датотека. Линкот се наоѓа на страната wp.mk/main.htm, а прикачувањето го обработува сервисот <code>wp.mk/jan/upload</code>. <b>Серверот само ја потврдува успешноста на операцијата.</b><br>Пополнете ги полињата. Клиентот веќе пристапил до сајтот неколку пати.",
+  req:{ method:["POST",HTTP_METHOD], uri:["/jan/upload",["/jan/upload","wp.mk/main.htm","/main.htm","/upload"]],
+        Host:["wp.mk",["wp.mk","wp.mk/main.htm","/jan/upload"]], ContentType:["multipart/form-data",HTTP_CT], ContentLength:["нумеричка вредност",HTTP_CL],
+        Referer:["wp.mk/main.htm",["не постои","wp.mk/main.htm","wp.mk/jan/upload"]], Cookie:["низа од бајти/знаци",HTTP_COOKIE], Body:["низа од бајти/знаци",HTTP_BODY] },
+  res:{ status:["200 OK",HTTP_STATUS], Server:[["Apache","Nginx"],HTTP_SERVER], ContentType:["не постои",HTTP_CT], ContentLength:["не постои",HTTP_CL],
+        Location:["не постои",["не постои","wp.mk/main.htm","wp.mk/jan/upload"]], Body:["не постои",HTTP_BODY] },
+  explain:"Праќање датотека = <b>POST</b> со <b>multipart/form-data</b> тело (бајтите на pdf-от) и нумеричка должина. Серверот само потврдува успех → <b>200 OK</b> без тело, па нема ContentType ни ContentLength, а Location е само за redirect.",
+  debated:"Се спомнува и дека одговорот може да има мал текст „success“. Текстот вели „само ја потврдува успешноста“, што одговара на статус 200 без содржина." },
+
+{ id:"h4", topic:"j2ee", src:"discord", type:"http",
+  q:"Клиент пополнува форма за најава и клика на копчето <b>Login</b>. Формата се наоѓа на страната wp.mk/login-page.html, а барањето го обработува сервисот <code>wp.mk/login</code>. По успешната најава, серверот го пренасочува клиентот на страната wp.mk/index.html.<br>Пополнете ги полињата. Клиентот веќе пристапил до сајтот неколку пати.",
+  req:{ method:["POST",HTTP_METHOD], uri:["/login",["/login","wp.mk/login","wp.mk/index.html","index.html","/login-page.html"]],
+        Host:["wp.mk",["wp.mk","wp.mk/login","index.html"]], ContentType:["application/x-www-form-urlencoded",HTTP_CT], ContentLength:["нумеричка вредност",HTTP_CL],
+        Referer:["wp.mk/login-page.html",["не постои","wp.mk/login-page.html","wp.mk/index.html","wp.mk/login"]], Cookie:["низа од бајти/знаци",HTTP_COOKIE], Body:["низа од бајти/знаци",HTTP_BODY] },
+  res:{ status:["302 Redirect",HTTP_STATUS], Server:[["Apache","Nginx"],HTTP_SERVER], ContentType:["не постои",HTTP_CT], ContentLength:["не постои",HTTP_CL],
+        Location:["wp.mk/index.html",["не постои","wp.mk/index.html","wp.mk/login","wp.mk/login-page.html"]], Body:["не постои",HTTP_BODY] },
+  explain:"Форма со корисничко име и лозинка = <b>POST</b>, тело <b>application/x-www-form-urlencoded</b> (username=...&password=...). Пренасочување = <b>302</b> со заглавје <b>Location: wp.mk/index.html</b> и без тело." },
+
+/* ---- Сервлет задачи со вредности ---- */
+{ id:"s1", topic:"j2ee", src:"discord", type:"composite",
+  q:"Даден е кодот од две класи:",
+  code:"@WebServlet(name = \"Servlet1\", value = \"/d1\",\n        initParams = {\n            @WebInitParam(name = \"day\", value = \"200\"),\n        })\npublic class D_Servlet1 extends HttpServlet {\n    public void doGet(HttpServletRequest request, HttpServletResponse response) {\n        // ги враќа вредностите на count, day, page, size\n    }\n}\n\n@WebServlet(name = \"Servlet2\", value = \"/d2\",\n        initParams = {\n            @WebInitParam(name = \"day\", value = \"100\"),\n        })\npublic class D_Servlet2 extends HttpServlet {\n    public void doGet(HttpServletRequest request, HttpServletResponse response) {\n        // ја инкрементира вредноста на page за 10 и на size за 5\n        // ги враќа вредностите на count, day, page, size\n    }\n}",
+  parts:[
+   {kind:"select", label:"Која од наведените URL адреси е валидна за повик на doGet метод од Servlet2?", choices:["Servlet1","Servlet2","/d1","/d2","D_Servlet2"], answer:"/d2"},
+   {kind:"multi", label:"Нека <code>config=getServletConfig()</code>, <code>context=getServletContext()</code> и <code>session=getSession()</code>. Нека во некој од методите се креира сесиски атрибут size = 10 и нека во contextInitialized() се иницира атрибут page = 20 кој се зачувува во context. Кои од методите ќе се извршат без грешка?",
+     options:["session.setAttribute(\"size\", 100)","context.setAttribute(\"page\", new Date())","context.setAttribute(\"count\", 10)","session.getAttribute(\"size\")","config.setAttribute(\"day\", 100)","config.getInitParameter(\"day\")","(Integer)session.getAttribute(\"size\")"], correct:[0,1,2,3,5,6]},
+   {kind:"input", label:"Клиент 2 ги повика GET /d2, GET /d1, GET /d2, а потоа клиент 1 ги повика GET /d1, GET /d2. Вредностите во последниот повик на клиент 1:", fields:[{name:"size",answer:"15"},{name:"day",answer:"100"},{name:"page",answer:"50"}]}],
+  explain:"<b>URL</b>: value=\"/d2\". <b>Без грешка</b>: ServletConfig <b>нема setAttribute</b> (има само getInitParameter), сите други методи постојат; атрибутите се Object, па и Date е дозволено. <b>size</b> е сесиски: клиент 1 има свое size=10, еднаш го повикал /d2 → 15. <b>day</b> е init параметар на Servlet2 → 100. <b>page</b> е во context, заеднички: 20 + 3 повици на /d2 (2 од клиент 2, 1 од клиент 1) × 10 = 50.",
+  debated:"count не е дефиниран во прикажаниот код, затоа го нема овде. За session.getAttribute(\"size\") maco вели дека бара cast; самиот повик се извршува без грешка (враќа Object), cast треба само ако го доделуваш на int." },
+
+{ id:"s2", topic:"j2ee", src:"discord", type:"composite",
+  q:"Даден е кодот од две класи и од web.config:",
+  code:"@WebServlet(name = \"Servlet1\", value = \"/s1\",\n        initParams = {\n            @WebInitParam(name = \"a\", value = \"5\"),\n        })\npublic class X_Servlet1 extends HttpServlet {\n    public void doGet(HttpServletRequest request, HttpServletResponse response) {\n        // ја инкрементира вредноста на c за 10 и на d за 20\n        // ги враќа вредностите на a, b, c, d\n    }\n}\n\n@WebServlet(name = \"Servlet2\", value = \"/s2\",\n        initParams = {\n            @WebInitParam(name = \"a\", value = \"10\"),\n        })\npublic class X_Servlet2 extends HttpServlet {\n    public void doGet(HttpServletRequest request, HttpServletResponse response) {\n        // ги враќа вредностите на a, b, c, d\n    }\n}\n\n<!-- web.config -->\n<context-param>\n    <param-name>b</param-name>\n    <param-value>20</param-value>\n</context-param>",
+  parts:[
+   {kind:"multi", label:"Нека <code>config=getServletConfig()</code>, <code>context=getServletContext()</code> и <code>session=getSession()</code> и нека во некој од методите се иницијализира сесиски атрибут c = 30, а во contextInitialized() се иницијализира атрибут d = 40 кој се поставува во context. Кои од методите ќе се извршат без грешка?",
+     options:["context.getInitParameter(\"d\")","context.getAttribute(\"a\")","session.setAttribute(\"c\", 100)","(Integer)session.getAttribute(\"c\")","config.getInitParameter(\"b\")","config.setAttribute(\"a\", 100)","context.setAttribute(\"d\", new Date())"], correct:[0,1,2,3,4,6]},
+   {kind:"input", label:"Клиент 2 го повика GET /s1. Потоа клиент 1 ги повика GET /s2, GET /s1. Вредностите при последниот повик на клиент 1:", fields:[{name:"a",answer:"5"},{name:"b",answer:"20"},{name:"c",answer:"40"},{name:"d",answer:"80"}]}],
+  explain:"<b>Без грешка</b>: само config.setAttribute не постои. getInitParameter/getAttribute за непостоечко име враќаат null, не фрлаат грешка. setAttribute прима Object, па и Date е ок. <b>Вредности</b> (последен повик е /s1): a = init параметар на Servlet1 = 5; b = context-param = 20; c е сесиски, клиент 1 има свое 30, /s1 го зголемува → 40; d е во context, заеднички: 40 → 60 (клиент 2) → 80 (клиент 1).",
+  debated:"Во Discord некои ги исклучуваат context.getInitParameter(\"d\") и context.getAttribute(\"a\"). Тие се компајлираат и само враќаат null, значи се извршуваат без грешка." },
+
+{ id:"s3", topic:"j2ee", src:"discord", type:"order",
+  q:"Веднаш по поставувањето на апликацијата составена од servlet1, servlet2 и servlet3, корисникот испраќа <b>POST</b> барање кое го обработува <b>servlet2</b>, а потоа две <b>GET</b> барања кои ги обработува <b>servlet1</b>. Потоа администраторот ја прекинува апликацијата (undeploy).<br>Подредете ги настаните по редослед на извршување. Ако ви останат вишок полиња, внесете „празно“.",
+  tiles:["container -> load servlet 1 class","container -> load servlet 2 class","container -> load servlet 3 class","servlet 1 -> init()","servlet 2 -> init()","servlet 3 -> init()","servlet 1 -> doGet()","servlet 1 -> doPost()","servlet 2 -> doGet()","servlet 2 -> doPost()","servlet 3 -> doGet()","servlet 3 -> doPost()","servlet 1 -> destroy()","servlet 2 -> destroy()","servlet 3 -> destroy()","празно"],
+  reuse:true, slots:9,
+  answers:[[1,4,9,0,3,6,6,12,13],[1,4,9,0,3,6,6,13,12]],
+  explain:"Сервлетите се вчитуваат <b>мрзеливо</b>: при првото барање до нив. POST до servlet2 → load class, init(), doPost(). Потоа GET до servlet1 → load class, init(), doGet(), и второто GET само doGet() (init е еднаш). servlet3 никогаш не е повикан, па не се вчитува. При undeploy се повикува destroy() на вчитаните сервлети.",
+  debated:"Спецификацијата не го фиксира редоследот на destroy(). Discord/maco го даваат обратно од вчитувањето (servlet1 па servlet2), но е прифатен и другиот редослед." },
+
+{ id:"f1", topic:"j2ee", src:"discord", type:"order",
+  q:"Нека во Deployment Descriptor-от се конфигурирани следните филтри. Подредете ги филтрите кои ќе се повикаат доколку се испрати барање до <b>/api/events/add</b>:",
+  code:"<filter-mapping>\n  <filter-name>F1</filter-name>\n  <servlet-name>/api/events/add</servlet-name>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>F2</filter-name>\n  <servlet-name>/api/students/add</servlet-name>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>F3</filter-name>\n  <url-pattern>/api/students/*</url-pattern>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>F4</filter-name>\n  <url-pattern>/api/*</url-pattern>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>F5</filter-name>\n  <url-pattern>/api/events/*</url-pattern>\n</filter-mapping>\n<filter-mapping>\n  <filter-name>F6</filter-name>\n  <url-pattern>/*</url-pattern>\n</filter-mapping>",
+  tiles:["ниту едно од наведените","F1","F2","F3","F4","F5","F6"],
+  reuse:true, slots:5,
+  answers:[[4,5,6,1,0]],
+  explain:"Контејнерот прво ги изминува мапирањата со <b>&lt;url-pattern&gt;</b> по редоследот во web.xml и ги зема сите што се совпаѓаат: F3 не (students), <b>F4</b> /api/*, <b>F5</b> /api/events/*, <b>F6</b> /*. Потоа повторно од почеток само тие со <b>&lt;servlet-name&gt;</b>: <b>F1</b>. Последното поле: ниту едно." },
+
+/* ---- Од предавањето ---- */
+{ id:"l1", topic:"spring", src:"lecture", type:"codefill",
+  q:"<b>Пример од испит (предавање 05):</b> Со минимален број анотации пополнете ги празните полиња за Spring контејнерот успешно да се иницијализира. Користете ја семантички најсоодветната анотација. Каде не треба, „ниту едно“; кај две полиња, по име растечки (без @), „ниту едно“ прво.<br><small>application.properties: <code>app.name=FCSE</code>; application-tmf.properties: <code>app.name=TMF</code></small>",
+  code:"{{1}}\nclass StudentRepositoryConfig {\n    {{2}}\n    public StudentRepository fcseStudents() {\n        // return instance for FCSE\n    }\n    {{3}}\n    public StudentRepository tmfStudents() {\n        // return instance for TMF\n    }\n}\n{{4}}\nclass UserRepository { /* ... */ }\n\n{{5}}\nclass FCSEStudentService {\n    {{6}}\n    private final UserRepository repository;\n    {{7}} {{8}}\n    private final StudentRepository x;\n    {{9}}\n    private String appName;\n\n    public FCSEStudentService(\n        {{10}} {{11}} UserRepository repository,\n        {{12}} {{13}} StudentRepository fcseStudents) {\n        // ...\n    }\n}\n\n{{14}}\nclass TMFStudentsService {\n    {{15}}\n    private UserRepository repository;\n    {{16}} {{17}}\n    private StudentRepository tmfStudents;\n}",
+  fields:{1:"@Configuration",2:"@Bean",3:"@Bean",4:"@Repository",5:"@Service",6:"ниту едно",7:"ниту едно",8:"ниту едно",9:"@Value(\"${app.name}\")",10:"ниту едно",11:"ниту едно",12:"ниту едно",13:"ниту едно",14:"@Service",15:"@Autowired",16:"ниту едно",17:"@Autowired"},
+  choices:SPRING_ANN,
+  extra:{label:"[18] Која вредност добива appName?", choices:["FCSE","TMF","ниту едно од наведените"], answer:"FCSE"},
+  explain:"Официјално решение од предавање 05: <b>@Configuration</b> со два <b>@Bean</b> методи; UserRepository е <b>@Repository</b>. FCSEStudentService е <b>@Service</b> со <b>конструкторско вметнување</b> (еден конструктор → не треба @Autowired), а од двата StudentRepository бина се избира по <b>име на параметарот</b> fcseStudents, па не треба @Qualifier. appName = <b>@Value(\"${app.name}\")</b>. TMFStudentsService користи вметнување во полиња: <b>@Autowired</b>, а бинот се избира по <b>име на полето</b> tmfStudents. [18] Профилот tmf не е активен → <b>FCSE</b>." }
+];
+
+</script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const TOPIC={j2ee:"J2EE & HTTP",spring:"Spring",mvc:"Spring MVC"};
+const SRC={doc:"Документ",discord:"Discord",lecture:"Предавање 05"};
+const LET="abcdefghij";
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+let S=null; // session: {mode, list:[ids], i, ans:{}, checked:{}, score:{}, start, streak}
+let topicSel=new Set(["j2ee","spring","mvc"]), srcSel=new Set(["doc","discord","lecture"]);
+const byId=Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+
+/* ---------- start screen ---------- */
+function chips(){
+  const tc=$("#topicChips"); tc.innerHTML="";
+  Object.entries(TOPIC).forEach(([k,v])=>{const n=QUESTIONS.filter(q=>q.topic===k).length;
+    const b=document.createElement("button");b.className="chip"+(topicSel.has(k)?" on":"");b.textContent=v+" · "+n;
+    b.onclick=()=>{topicSel.has(k)?topicSel.delete(k):topicSel.add(k);if(!topicSel.size)topicSel.add(k);chips()};tc.appendChild(b)});
+  const sc=$("#srcChips"); sc.innerHTML="";
+  Object.entries(SRC).forEach(([k,v])=>{const n=QUESTIONS.filter(q=>q.src===k).length;
+    const b=document.createElement("button");b.className="chip"+(srcSel.has(k)?" on":"");b.textContent=v+" · "+n;
+    b.onclick=()=>{srcSel.has(k)?srcSel.delete(k):srcSel.add(k);if(!srcSel.size)srcSel.add(k);chips()};sc.appendChild(b)});
+  $("#poolCount").textContent=pool().length+" прашања";
+}
+const TORD={j2ee:0,spring:1,mvc:2};
+const pool=()=>QUESTIONS.filter(q=>topicSel.has(q.topic)&&srcSel.has(q.src)).sort((x,y)=>TORD[x.topic]-TORD[y.topic]).map(q=>q.id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function examList(){
+  const pick=(t,n)=>shuffle(QUESTIONS.filter(q=>q.topic===t).map(q=>q.id)).slice(0,n);
+  return [...pick("j2ee",8),...pick("spring",2),...pick("mvc",5)];
+}
+function begin(mode,list){
+  S={mode,list,i:0,ans:{},checked:{},score:{},start:Date.now(),streak:0,limit:mode==="exam"?30*60:0};
+  store.set("vm_session",S);
+  show("quiz"); renderAll();
+}
+function show(id){["start","quiz","end"].forEach(s=>$("#"+s).classList.toggle("hidden",s!==id));window.scrollTo({top:0,behavior:"smooth"})}
+
+/* ---------- grading ---------- */
+function gradeMulti(sel,correct,n){
+  sel=sel||[];const nc=correct.length,nw=n-nc;let s=0;
+  sel.forEach(i=>{s+=correct.includes(i)?1/nc:(nw?-1/nw:0)});
+  return Math.max(0,Math.min(1,s));
+}
+const okVal=(acc,v)=>Array.isArray(acc)?acc.includes(v):acc===v;
+function grade(q,a){
+  a=a||{};
+  switch(q.type){
+    case "single": return (a.sel&&a.sel[0]===q.correct[0])?1:0;
+    case "multi": return gradeMulti(a.sel,q.correct,q.options.length);
+    case "match": return q.items.filter((it,i)=>(a.m||{})[i]===it.answer).length/q.items.length;
+    case "order": { const got=a.slots||[];const n=q.answers[0].length;
+      return Math.max(...q.answers.map(ans=>ans.filter((v,i)=>got[i]===v).length/n)); }
+    case "http": { const f=httpFields(q);let ok=0;f.forEach(([side,k,acc])=>{if(okVal(acc,(a[side]||{})[k]))ok++});return ok/f.length; }
+    case "composite": { let t=0;q.parts.forEach((p,pi)=>{const pa=(a.p||{})[pi]||{};
+        if(p.kind==="multi")t+=gradeMulti(pa.sel,p.correct,p.options.length);
+        else if(p.kind==="select")t+=pa.v===p.answer?1:0;
+        else t+=p.fields.filter(f=>String((pa.in||{})[f.name]||"").trim()===f.answer).length/p.fields.length;});
+      return t/q.parts.length; }
+    case "codefill": { const ks=Object.keys(q.fields);let ok=ks.filter(k=>(a.f||{})[k]===q.fields[k]).length;
+      let tot=ks.length; if(q.extra){tot++;if(a.extra===q.extra.answer)ok++;} return ok/tot; }
+  }
+  return 0;
+}
+function httpFields(q){const out=[];["req","res"].forEach(side=>Object.entries(q[side]).forEach(([k,v])=>out.push([side,k,v[0],v[1]])));return out}
+function answered(q,a){
+  if(!a)return false;
+  switch(q.type){case "single":case "multi":return !!(a.sel&&a.sel.length);
+    case "order":return (a.slots||[]).some(v=>v!=null);
+    default:{const has=o=>o!=null&&(typeof o!=="object"?String(o).trim()!=="":Array.isArray(o)?o.some(has):Object.values(o).some(has));return has(a);}}
+}
+
+/* ---------- render ---------- */
+function renderAll(){renderHud();renderNav();renderCard(true)}
+function renderHud(){
+  $("#modeLbl").textContent=S.mode==="exam"?"Exam sim":"Practice";
+  const pts=Object.values(S.score).reduce((a,b)=>a+b,0);
+  $("#money").textContent="$"+Math.round(pts*1000).toLocaleString("en-US");
+  const st=$("#stars");st.innerHTML="";
+  for(let k=0;k<5;k++){st.insertAdjacentHTML("beforeend",'<svg viewBox="0 0 24 24" class="'+(k<Math.min(5,S.streak)?"on":"")+'"><path d="M12 2l2.9 6.9L22 9.6l-5.4 4.8L18.2 22 12 18.3 5.8 22l1.6-7.6L2 9.6l7.1-.7z"/></svg>')}
+}
+function renderNav(){
+  const g=$("#navgrid");g.innerHTML="";
+  S.list.forEach((id,i)=>{const b=document.createElement("button");b.className="nb";b.textContent=i+1;
+    const q=byId[id];
+    if(S.checked[id]){const sc=S.score[id];b.classList.add(sc>=.999?"ok":sc>0?"part":"bad")}
+    else if(answered(q,S.ans[id]))b.classList.add("ans");
+    if(i===S.i)b.classList.add("cur");
+    b.onclick=()=>{S.i=i;save();renderNav();renderCard(true)};g.appendChild(b)});
+}
+function save(){store.set("vm_session",S)}
+
+function renderCard(anim){
+  const id=S.list[S.i],q=byId[id];const a=S.ans[id]||(S.ans[id]={});const locked=!!S.checked[id];
+  const w=$("#cardWrap");
+  let h='<div class="card'+(anim?" enter":"")+'" id="card">';
+  h+='<div class="qhead"><span class="qnum">'+String(S.i+1).padStart(2,"0")+'</span><span class="badge b-'+q.topic+'">'+TOPIC[q.topic]+'</span><span class="badge b-src">'+SRC[q.src]+'</span>'+(q.debated?'<span class="badge b-deb">Debated</span>':'')+'<span class="grow"></span><span class="hint" style="margin:0">'+(S.i+1)+" / "+S.list.length+'</span></div>';
+  h+='<div class="qtext">'+q.q+'</div>';
+  if(q.code&&q.type!=="codefill")h+='<pre class="code">'+esc(q.code)+'</pre>';
+  if(q.qAfter)h+='<div class="qtext">'+q.qAfter+'</div>';
+  h+='<div id="body" class="'+(locked?"locked":"")+'"></div>';
+  h+='<div class="actions"><button class="btn" id="prev"'+(S.i===0?" disabled":"")+'>← Назад</button><span class="grow"></span>'+
+     (locked?'<button class="btn" id="retry">Обиди се пак</button>':'<button class="btn go" id="check">Провери</button>')+
+     '<button class="btn teal" id="next">'+(S.i===S.list.length-1?"Заврши":"Следно →")+'</button></div>';
+  h+='<div id="fbWrap"></div></div>';
+  w.innerHTML=h;
+  const body=$("#body");
+  ({single:rOpts,multi:rOpts,match:rMatch,order:rOrder,http:rHttp,composite:rComp,codefill:rCode})[q.type](q,a,body,locked);
+  if(locked)renderFb(q);
+  $("#prev").onclick=()=>go(-1);
+  $("#next").onclick=()=>S.i===S.list.length-1?finish():go(1);
+  if($("#check"))$("#check").onclick=check;
+  if($("#retry"))$("#retry").onclick=()=>{delete S.checked[id];delete S.score[id];S.ans[id]={};save();renderHud();renderNav();renderCard(true)};
+}
+function go(d){S.i=Math.max(0,Math.min(S.list.length-1,S.i+d));save();renderNav();renderCard(true)}
+const touch=()=>{save();renderNav()};
+
+function optHtml(text,isCode){return isCode?'<pre>'+esc(text)+'</pre>':esc(text)}
+function rOpts(q,a,body,locked){
+  const multi=q.type==="multi";
+  body.innerHTML='<p class="hint">'+(multi?"Select one or more:":"Select one:")+'</p><div class="opts '+(multi?"":"single")+'"></div>';
+  const box=body.querySelector(".opts");a.sel=a.sel||[];
+  q.options.forEach((o,i)=>{
+    const d=document.createElement("label");d.className="opt";
+    d.innerHTML='<span class="box"></span><span class="let">'+LET[i]+'.</span><span class="txt">'+optHtml(o,q.codeOptions)+'</span>';
+    if(a.sel.includes(i))d.classList.add("sel");
+    if(locked){const c=q.correct.includes(i),s=a.sel.includes(i);if(s&&c)d.classList.add("right");else if(s&&!c)d.classList.add("wrong");else if(c)d.classList.add("missed")}
+    else d.onclick=e=>{e.preventDefault();
+      if(multi){a.sel=a.sel.includes(i)?a.sel.filter(x=>x!==i):[...a.sel,i]}else a.sel=[i];
+      box.querySelectorAll(".opt").forEach((el,k)=>el.classList.toggle("sel",a.sel.includes(k)));touch()};
+    box.appendChild(d)});
+}
+function ddHtml(choices,val,cls){return '<select class="dd '+(cls||"")+'"><option value="">Choose...</option>'+choices.map(c=>'<option'+(c===val?" selected":"")+'>'+esc(c)+'</option>').join("")+'</select>'}
+function rMatch(q,a,body,locked){
+  a.m=a.m||{};
+  body.innerHTML='<div class="match">'+q.items.map((it,i)=>{
+    const v=a.m[i],cls=locked?(v===it.answer?"right":"wrong"):"";
+    return '<div class="mrow"><div class="lab">'+esc(it.label)+(locked&&v!==it.answer?'<div class="fix">✓ '+esc(it.answer)+'</div>':'')+'</div>'+ddHtml(q.choices,v,cls)+'</div>'}).join("")+'</div>';
+  body.querySelectorAll("select").forEach((s,i)=>{s.disabled=locked;s.onchange=()=>{a.m[i]=s.value||undefined;touch()}});
+}
+function rHttp(q,a,body,locked){
+  a.req=a.req||{};a.res=a.res||{};
+  const sel=(side,k)=>{const [acc,ch]=q[side][k];const v=a[side][k];const cls=locked?(okVal(acc,v)?"right":"wrong"):"";
+    return ddHtml(ch,v,cls).replace('<select','<select data-side="'+side+'" data-k="'+k+'"')};
+  const fix=(side,k)=>{if(!locked)return"";const [acc]=q[side][k];return okVal(acc,a[side][k])?"":'<div class="fix" style="grid-column:2">✓ '+esc(Array.isArray(acc)?acc.join(" / "):acc)+'</div>'};
+  const row=(side,k,lab)=>'<div class="hrow"><label>'+lab+':</label>'+sel(side,k)+fix(side,k)+'</div>';
+  let h='<div class="http"><div class="col"><h5 class="reqh">Request</h5><div class="line1">'+sel("req","method")+sel("req","uri")+'<span class="v">HTTP/1.1</span></div>'+fix("req","method")+fix("req","uri");
+  ["Host","ContentType","ContentLength","Referer","Cookie","Body"].forEach(k=>h+=row("req",k,k));
+  h+='</div><div class="col"><h5 class="resh">Response</h5><div class="line1"><span class="v">HTTP/1.1</span>'+sel("res","status")+'</div>'+fix("res","status");
+  ["Server","ContentType","ContentLength","Location","Body"].forEach(k=>h+=row("res",k,k));
+  h+='</div></div>';body.innerHTML=h;
+  body.querySelectorAll("select").forEach(s=>{s.disabled=locked;s.onchange=()=>{a[s.dataset.side][s.dataset.k]=s.value||undefined;touch()}});
+}
+function rComp(q,a,body,locked){
+  a.p=a.p||{};let h="";
+  q.parts.forEach((p,pi)=>{const pa=a.p[pi]=a.p[pi]||{};h+='<div class="part" data-pi="'+pi+'"><div class="pl">'+p.label+'</div>';
+    if(p.kind==="select"){const cls=locked?(pa.v===p.answer?"right":"wrong"):"";h+=ddHtml(p.choices,pa.v,cls)+(locked&&pa.v!==p.answer?'<div class="fix">✓ '+esc(p.answer)+'</div>':'')}
+    else if(p.kind==="multi"){pa.sel=pa.sel||[];h+='<div class="opts">'+p.options.map((o,i)=>{let c="opt"+(pa.sel.includes(i)?" sel":"");
+        if(locked){const ok=p.correct.includes(i),s=pa.sel.includes(i);c+=s&&ok?" right":s&&!ok?" wrong":ok?" missed":""}
+        return '<label class="'+c+'" data-i="'+i+'"><span class="box"></span><span class="txt"><code>'+esc(o)+'</code></span></label>'}).join("")+'</div>'}
+    else{pa.in=pa.in||{};h+='<div class="inrow">'+p.fields.map(f=>{const v=pa.in[f.name]||"";const cls=locked?(String(v).trim()===f.answer?"right":"wrong"):"";
+        return '<label>'+f.name+' <input class="'+cls+'" data-f="'+f.name+'" value="'+esc(v)+'" inputmode="numeric"'+(locked?" disabled":"")+'>'+(locked&&String(v).trim()!==f.answer?'<span class="fix">✓ '+f.answer+'</span>':'')+'</label>'}).join("")+'</div>'}
+    h+='</div>'});
+  body.innerHTML=h;
+  body.querySelectorAll(".part").forEach(el=>{const pi=+el.dataset.pi,p=q.parts[pi],pa=a.p[pi];
+    if(locked){el.querySelectorAll("select").forEach(s=>s.disabled=true);return}
+    el.querySelectorAll("select").forEach(s=>s.onchange=()=>{pa.v=s.value||undefined;touch()});
+    el.querySelectorAll(".opt").forEach(o=>o.onclick=e=>{e.preventDefault();const i=+o.dataset.i;pa.sel=pa.sel.includes(i)?pa.sel.filter(x=>x!==i):[...pa.sel,i];o.classList.toggle("sel");touch()});
+    el.querySelectorAll("input").forEach(inp=>inp.oninput=()=>{pa.in[inp.dataset.f]=inp.value;touch()});
+  });
+}
+function rCode(q,a,body,locked){
+  a.f=a.f||{};
+  const html=esc(q.code).replace(/\{\{(\d+)\}\}/g,(m,n)=>{const v=a.f[n],ok=v===q.fields[n];const cls=locked?(ok?"right":"wrong"):"";
+    return '<span class="fnum">'+n+'</span>'+ddHtml(q.choices,v,cls).replace('<select','<select data-n="'+n+'"'+(locked&&!ok?' title="✓ '+esc(q.fields[n])+'"':''))});
+  let h='<pre class="code fill">'+html+'</pre>';
+  if(q.extra){const v=a.extra,cls=locked?(v===q.extra.answer?"right":"wrong"):"";h+='<div class="part"><div class="pl">'+esc(q.extra.label)+'</div>'+ddHtml(q.extra.choices,v,cls).replace('<select','<select data-extra="1"')+'</div>'}
+  if(locked){const wrong=Object.keys(q.fields).filter(k=>a.f[k]!==q.fields[k]);if(wrong.length)h+='<div class="fix" style="margin-top:6px">Точно: '+wrong.map(k=>"["+k+"] "+esc(q.fields[k])).join(" · ")+'</div>'}
+  body.innerHTML=h;
+  body.querySelectorAll("select").forEach(s=>{s.disabled=locked;s.onchange=()=>{if(s.dataset.extra)a.extra=s.value||undefined;else a.f[s.dataset.n]=s.value||undefined;touch()}});
+}
+/* drag & drop + tap-to-place */
+function rOrder(q,a,body,locked){
+  const n=q.slots||q.answers[0].length;a.slots=a.slots||Array(n).fill(null);
+  const best=locked?q.answers.reduce((b,ans)=>{const s=ans.filter((v,i)=>a.slots[i]===v).length;return s>b.s?{s,ans}:b},{s:-1,ans:q.answers[0]}).ans:null;
+  let h='<p class="hint">'+(locked?"":"Повлечи плочка во поле, или кликни плочка па кликни поле.")+'</p><div class="slots'+(n<=5&&!q.tiles.some(t=>t.length>22)?" row":"")+'">';
+  for(let i=0;i<n;i++){const v=a.slots[i];let cls="slot"+(v!=null?" filled":"");
+    if(locked)cls+=v===best[i]?" right":" wrong";
+    h+='<div class="'+cls+'" data-s="'+i+'">'+(v!=null?esc(q.tiles[v]):'<span style="color:var(--dim)">…</span>')+(locked&&v!==best[i]?'<span class="fix" style="margin-left:auto">✓ '+esc(q.tiles[best[i]])+'</span>':'')+(!locked&&v!=null?'<span class="x" data-x="'+i+'">✕</span>':'')+'</div>'}
+  h+='</div>';
+  if(!locked){h+='<div class="tiles">'+q.tiles.map((t,i)=>{const used=!q.reuse&&a.slots.includes(i);return '<div class="tile'+(used?" used":"")+'" draggable="true" data-t="'+i+'">'+esc(t)+'</div>'}).join("")+'</div>'}
+  body.innerHTML=h;if(locked)return;
+  let picked=null;
+  const place=(slot,t)=>{if(!q.reuse){const prev=a.slots.indexOf(t);if(prev>-1)a.slots[prev]=null}a.slots[slot]=t;touch();rOrder(q,a,body,false);
+    const el=body.querySelector('[data-s="'+slot+'"]');if(el){el.animate([{transform:"scale(1.06)"},{transform:"scale(1)"}],{duration:220})}};
+  body.querySelectorAll(".tile").forEach(t=>{
+    t.ondragstart=e=>{e.dataTransfer.setData("text/plain",t.dataset.t);t.classList.add("dragging")};
+    t.ondragend=()=>t.classList.remove("dragging");
+    t.onclick=()=>{body.querySelectorAll(".tile").forEach(x=>x.classList.remove("picked"));
+      if(picked===+t.dataset.t){picked=null;return}picked=+t.dataset.t;t.classList.add("picked");
+      body.querySelectorAll(".slot").forEach(s=>s.classList.toggle("armed",true))};
+  });
+  body.querySelectorAll(".slot").forEach(s=>{
+    s.ondragover=e=>{e.preventDefault();s.classList.add("over")};
+    s.ondragleave=()=>s.classList.remove("over");
+    s.ondrop=e=>{e.preventDefault();s.classList.remove("over");const t=e.dataTransfer.getData("text/plain");if(t!=="")place(+s.dataset.s,+t)};
+    s.onclick=e=>{if(e.target.dataset.x!=null){a.slots[+e.target.dataset.x]=null;touch();rOrder(q,a,body,false);return}
+      if(picked!=null)place(+s.dataset.s,picked)};
+  });
+}
+
+/* ---------- check & feedback ---------- */
+function check(){
+  const id=S.list[S.i],q=byId[id];
+  const sc=grade(q,S.ans[id]);S.score[id]=sc;S.checked[id]=true;
+  if(sc>=.999){S.streak++;toast("Respect +","good");burst("good")}
+  else if(sc>0){toast("Close call","mid");burst("mid")}
+  else{S.streak=0;toast("Busted","bad");$("#card").classList.add("shake")}
+  save();renderHud();renderNav();renderCard(false);
+}
+function renderFb(q){
+  const id=q.id,sc=S.score[id]||0;const cls=sc>=.999?"good":sc>0?"mid":"bad";
+  const v=sc>=.999?"Точно":sc>0?"Делумно точно":"Неточно";
+  let h='<div class="fb '+cls+'"><div class="verdict">'+v+' <span class="pts">'+(Math.round(sc*100)/100).toFixed(2)+' / 1.00</span></div><div class="ex">'+q.explain+'</div>';
+  if(q.debated)h+='<div class="deb"><strong>Debated</strong>'+q.debated+'</div>';
+  h+='</div>';$("#fbWrap").innerHTML=h;
+}
+
+/* ---------- finish ---------- */
+function finish(){
+  clearInterval(tick);
+  S.list.forEach(id=>{if(!S.checked[id]){S.score[id]=grade(byId[id],S.ans[id]);S.checked[id]=true}});
+  save();
+  const tot=S.list.length,pts=S.list.reduce((s,id)=>s+(S.score[id]||0),0),pct=pts/tot;
+  const pass=pct>=.5;
+  $("#endTitle").textContent=pass?"Mission Passed":"Mission Failed";
+  $("#endTitle").classList.toggle("fail",!pass);
+  $("#endKick").textContent=S.mode==="exam"?"Exam sim · резултат":"Practice · резултат";
+  $("#endScore").textContent=(Math.round(pts*100)/100)+" / "+tot;
+  $("#endScore").style.color=pass?"var(--lime)":"var(--red)";
+  const wrong=S.list.filter(id=>(S.score[id]||0)<.999).length;
+  $("#endSub").textContent=Math.round(pct*100)+"% · "+(tot-wrong)+" целосно точни · "+wrong+" за повторување";
+  const bars=$("#endBars");bars.innerHTML="";
+  Object.entries(TOPIC).forEach(([k,v])=>{const ids=S.list.filter(id=>byId[id].topic===k);if(!ids.length)return;
+    const p=ids.reduce((s,id)=>s+(S.score[id]||0),0);
+    bars.insertAdjacentHTML("beforeend",'<div class="bar"><div class="t"><span>'+v+'</span><span>'+(Math.round(p*100)/100)+" / "+ids.length+'</span></div><div class="tr"><div class="fl" data-w="'+(p/ids.length*100)+'"></div></div></div>')});
+  show("end");
+  setTimeout(()=>bars.querySelectorAll(".fl").forEach(f=>f.style.width=f.dataset.w+"%"),120);
+  if(pass){for(let k=0;k<4;k++)setTimeout(()=>burst("good",true),k*260)}
+  $("#reviewWrong").disabled=!wrong;
+}
+$("#reviewWrong").onclick=()=>{const ids=S.list.filter(id=>(S.score[id]||0)<.999);begin("practice",ids)};
+$("#reviewAll").onclick=()=>{S.i=0;S.mode="review";show("quiz");renderAll()};
+$("#again").onclick=()=>{show("start");chips()};
+
+/* ---------- timer ---------- */
+let tick=null;
+function startTimer(){clearInterval(tick);tick=setInterval(()=>{if(!S||$("#quiz").classList.contains("hidden"))return;
+  const el=(Date.now()-S.start)/1000;let t=S.limit?Math.max(0,S.limit-el):el;
+  const m=String(Math.floor(t/60)).padStart(2,"0"),s=String(Math.floor(t%60)).padStart(2,"0");
+  const tm=$("#timer");tm.innerHTML=(S.limit?'<span class="tl">Time left </span>':"")+m+":"+s;tm.classList.toggle("calm",!S.limit||t>300);
+  if(S.limit&&t<=0)finish();},500)}
+
+/* ---------- wiring ---------- */
+$("#mExam").onclick=()=>{begin("exam",examList());startTimer()};
+$("#mPrac").onclick=()=>{begin("practice",pool());startTimer()};
+$("#home").onclick=()=>{show("start");chips()};
+$("#finish").onclick=finish;
+$("#reset").onclick=()=>{S.ans={};S.checked={};S.score={};S.streak=0;S.i=0;S.start=Date.now();save();renderAll()};
+document.addEventListener("keydown",e=>{if($("#quiz").classList.contains("hidden"))return;
+  if(["INPUT","SELECT","TEXTAREA"].includes(document.activeElement.tagName))return;
+  if(e.key==="ArrowRight")go(1);else if(e.key==="ArrowLeft")go(-1);else if(e.key==="Enter"&&$("#check"))check()});
+
+/* ---------- toast ---------- */
+function toast(t,c){const el=$("#toast");el.className="";void el.offsetWidth;el.textContent=t;el.className="show "+c}
+
+/* ---------- particles ---------- */
+const cv=$("#fx"),cx=cv.getContext("2d");let W,H,P=[],B=[];const DPR=Math.min(2,window.devicePixelRatio||1);
+function rs(){W=cv.width=innerWidth*DPR;H=cv.height=innerHeight*DPR;cv.style.width=innerWidth+"px";cv.style.height=innerHeight+"px"}
+addEventListener("resize",rs);rs();
+const COLS=["#ff3d8b","#ffb347","#2de2e6","#9b5cff","#ff7a3d"];
+for(let i=0;i<70;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:(Math.random()*1.8+.4)*DPR,v:(Math.random()*.35+.08)*DPR,d:Math.random()*Math.PI*2,c:COLS[i%5],a:Math.random()*.6+.25});
+function burst(kind,wide){const cols=kind==="good"?["#7dffb0","#2de2e6","#ffcf5c","#ff3d8b"]:["#ffb347","#ff7a3d","#ff3d8b"];
+  const cxp=wide?Math.random()*W:W/2,cyp=wide?Math.random()*H*.6:H*.38;
+  for(let i=0;i<(wide?70:46);i++){const ang=Math.random()*Math.PI*2,sp=(Math.random()*7+2)*DPR;B.push({x:cxp,y:cyp,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-2*DPR,l:1,c:cols[i%cols.length],r:(Math.random()*2.5+1.2)*DPR,sq:Math.random()<.4})}}
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function loop(){cx.clearRect(0,0,W,H);
+  P.forEach(p=>{p.y-=p.v;p.d+=.01;p.x+=Math.sin(p.d)*.3*DPR;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}
+    cx.globalAlpha=p.a*(.6+.4*Math.sin(p.d*3));cx.fillStyle=p.c;cx.shadowColor=p.c;cx.shadowBlur=8*DPR;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill()});
+  cx.shadowBlur=0;
+  B=B.filter(b=>b.l>0);B.forEach(b=>{b.x+=b.vx;b.y+=b.vy;b.vy+=.18*DPR;b.vx*=.985;b.l-=.016;cx.globalAlpha=Math.max(0,b.l);cx.fillStyle=b.c;
+    if(b.sq){cx.save();cx.translate(b.x,b.y);cx.rotate(b.l*10);cx.fillRect(-b.r,-b.r/2,b.r*2,b.r);cx.restore()}else{cx.beginPath();cx.arc(b.x,b.y,b.r,0,7);cx.fill()}});
+  cx.globalAlpha=1;if(!reduce)requestAnimationFrame(loop)}
+loop();
+
+/* ---------- boot ---------- */
+chips();
+const prev=store.get("vm_session",null);
+if(prev&&prev.list&&prev.list.every(id=>byId[id])&&Object.keys(prev.checked||{}).length<prev.list.length&&Object.keys(prev.ans||{}).length){
+  // resume silently available via Practice/Exam buttons; offer quick resume chip
+  const b=document.createElement("button");b.className="btn teal";b.style.marginTop="18px";b.textContent="Продолжи ја претходната мисија";
+  b.onclick=()=>{S=prev;show("quiz");renderAll();startTimer()};$("#start").insertBefore(b,$(".chips"));
+}
+})();
+</script>
+</body>
+</html>
